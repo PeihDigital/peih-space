@@ -1216,7 +1216,6 @@ try {
     currentLang = sysLang.startsWith('vi') ? 'vi' : (sysLang.startsWith('ja') ? 'ja' : 'en');
 }
 // ------------------------------------------
-changeLang(currentLang, true);
     let activeEggTimeouts = [];
 // --- 1. KHỞI TẠO TÀI KHOẢN VÀ BỘ NHỚ TRƯỚC ---
     let currentSessionId = 'Guest_' + Math.random().toString(36).substr(2, 6).toUpperCase();
@@ -3158,7 +3157,7 @@ function getDynamicSystemLostMsg() {
 }
     // Biến toàn cục để khóa hệ thống khi mất mạng
     window.isSystemHalted = false;
-
+    changeLang(currentLang, true);
     document.addEventListener('DOMContentLoaded', () => {
 
       checkNightTimeForCoffee(); inputField.placeholder = translations[currentLang].connecting; 
