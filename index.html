@@ -1201,6 +1201,7 @@ body.doraemon-mode .image-flipper {
      isDartCooldown: false
     }; 
     // --- LOGIC NHẬN DIỆN NGÔN NGỮ MÁY CHUẨN ---
+changeLang(currentLang, true);
 let currentLang = 'en'; 
 try {
     let savedLang = localStorage.getItem('peih_lang');
@@ -3160,7 +3161,7 @@ function getDynamicSystemLostMsg() {
     window.isSystemHalted = false;
 
     document.addEventListener('DOMContentLoaded', () => {
-      changeLang(currentLang, true);
+
       checkNightTimeForCoffee(); inputField.placeholder = translations[currentLang].connecting; 
       document.documentElement.style.setProperty('--dora-bread-text', `'${translations[currentLang].cssBread}'`);
 
