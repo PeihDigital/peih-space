@@ -1215,9 +1215,8 @@ try {
     const sysLang = navigator.language || navigator.userLanguage;
     currentLang = sysLang.startsWith('vi') ? 'vi' : (sysLang.startsWith('ja') ? 'ja' : 'en');
 }
-changeLang(currentLang, true);
 // ------------------------------------------
-
+changeLang(currentLang, true);
     let activeEggTimeouts = [];
 // --- 1. KHỞI TẠO TÀI KHOẢN VÀ BỘ NHỚ TRƯỚC ---
     let currentSessionId = 'Guest_' + Math.random().toString(36).substr(2, 6).toUpperCase();
