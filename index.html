@@ -1179,9 +1179,9 @@ body.doraemon-mode .image-flipper {
       <div class="pink-door" id="pink-door-content">
           <div style="position:absolute; top: 10px; right: -25px; width:15px; height: 15px; background: gold; border-radius: 50%;"></div>
           <h3 id="door-title" style="color: white; text-align: center; text-shadow: 1px 1px 0 #000;">Nơi bạn muốn đến?</h3>
-          <a href="#" class="door-link">🌍 Portfolio Website</a>
-          <a href="#" class="door-link">💼 LinkedIn Profile</a>
-          <a href="#" class="door-link">🐙 GitHub Repos</a>
+          <a href="https://your-portfolio.com" target="_blank" rel="noopener noreferrer" class="door-link">🌍 Portfolio Website</a>
+          <a href="https://linkedin.com/in/yourname" target="_blank" rel="noopener noreferrer" class="door-link">💼 LinkedIn Profile</a>
+          <a href="https://github.com/yourname" target="_blank" rel="noopener noreferrer" class="door-link">🐙 GitHub Repos</a>
       </div>
   </div>
 
@@ -3240,6 +3240,13 @@ function getDynamicSystemLostMsg() {
     window.isSystemHalted = false;
     changeLang(currentLang, true);
     document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const referer = urlParams.get('ref');
+
+      if (referer) {
+          google.script.run.trackVisit(referer);
+          window.history.replaceState({}, document.title, window.location.pathname);
+      }
 
       checkNightTimeForCoffee(); inputField.placeholder = translations[currentLang].connecting; 
       document.documentElement.style.setProperty('--dora-bread-text', `'${translations[currentLang].cssBread}'`);
