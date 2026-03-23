@@ -243,12 +243,26 @@ body.threads-active #threads-wrapper {
     object-fit: contain; /* Đảm bảo không bao giờ bị cắt xén */
 }
 
-/* HIỆU ỨNG TẢI ẢNH */
+/* HIỆU ỨNG TẢI ẢNH (SKELETON LOADING) */
 .img-loading {
-    opacity: 0;
+    /* Tạo màu nền xám mờ dùng được cho cả Light và Dark mode */
+    background-color: rgba(156, 163, 175, 0.2); 
+    /* Hiệu ứng nhịp đập nhấp nháy nhẹ */
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; 
+    /* Ẩn cái icon "ảnh bị vỡ" mặc định của trình duyệt đi */
+    color: transparent; 
+    /* Giữ chỗ: Ép độ cao tối thiểu để khung không bị xẹp lép trước khi ảnh tải */
+    min-height: 250px; 
+    min-width: 50%;
+    /* Ẩn ảnh thật đi cho đến khi tải xong, chỉ hiện nền xám */
+    opacity: 0.7; 
 }
+
 .img-loaded {
+    background-color: transparent;
+    animation: none;
     opacity: 1;
+    transition: opacity 0.4s ease;
 }
 
 .thread-line {
