@@ -3242,10 +3242,11 @@ function getDynamicSystemLostMsg() {
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
       const referer = urlParams.get('ref');
-
       if (referer) {
           google.script.run.trackVisit(referer);
           window.history.replaceState({}, document.title, window.location.pathname);
+      } else {
+          google.script.run.trackVisit('direct');
       }
 
       checkNightTimeForCoffee(); inputField.placeholder = translations[currentLang].connecting; 
