@@ -3572,7 +3572,7 @@ function handleInputTyping() {
       const combinedMessage = userMessageBuffer.join('\n'); userMessageBuffer = []; currentBubblesContainer = null; 
       inputField.disabled = true; sendBtn.disabled = true; sendBtn.innerText = "...";
       chatContextHistory.push({role: "user", text: combinedMessage});
-
+      localStorage.setItem('peih_context_' + currentSessionId, JSON.stringify(chatContextHistory));
       const typingId = 'typing-' + Date.now();
       chatBox.insertAdjacentHTML('beforeend', `<div id="${typingId}" class="flex items-end gap-1.5 w-full mb-1 mt-4"><img src="${getAvatarUrl()}" class="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm"><div class="rounded-[24px] px-4 py-3 flex gap-1 items-center shadow-sm h-[38px]" style="background-color: var(--bot-msg-bg); border: 1px solid var(--glass-border);"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`);
       chatBox.scrollTop = chatBox.scrollHeight;
