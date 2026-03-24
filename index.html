@@ -3379,7 +3379,7 @@ function getDynamicSystemLostMsg() {
           }
       }, 10000);
 
-      google.script.run.withSuccessHandler(async function(config) {
+      google.script.run.withSuccessHandler(async function(payload) {
           isConfigLoaded = true; 
           clearTimeout(loadingTimer4s);
           clearTimeout(loadingTimer10s);
@@ -3387,7 +3387,11 @@ function getDynamicSystemLostMsg() {
           const sysBubbles = document.querySelectorAll('.system-bubble');
           sysBubbles.forEach(b => { if (b.innerText.includes("⚠️")) b.remove(); });
 
-          globalUIConfig = config;
+          // TÁCH PAYLOAD THÀNH CONFIG VÀ THREADS Ở ĐÂY
+          globalUIConfig = payload.uiConfig;
+          window.cachedThreadsData = payload.threadsData; // Nạp Threads thẳng vào RAM
+          
+          let config = payload.uiConfig; // Tạo lại biến config cho code cũ bên dưới chạy bình thường
           document.getElementById('welcome-screen').classList.add('hidden');
           if(config.appStatus === "OFF") {
              isAppSleeping = true; inputField.disabled = true; sendBtn.disabled = false; sendBtn.innerText = translations[currentLang].wakeBtn;
@@ -3423,7 +3427,7 @@ function getDynamicSystemLostMsg() {
             inputField.disabled = true; 
             sendBtn.disabled = true;
             inputField.placeholder = translations[currentLang].disconnected; 
-        }).getUIConfig(); 
+        }).getInitialAppPayload(currentLang); 
         
       setInterval(rotateQuotes, 6000); rotateQuotes();
     });
@@ -3439,7 +3443,8 @@ function getDynamicSystemLostMsg() {
       currentBubblesContainer = null; if (previousReceiptDiv) { previousReceiptDiv.remove(); previousReceiptDiv = null; }
       appendUserMsgToUI(translations[currentLang].wakeUpCall);
       currentBubblesContainer = null; if (currentReceiptDiv) { currentReceiptDiv.innerText = translations[currentLang].read; previousReceiptDiv = currentReceiptDiv; }
-      google.script.run.withSuccessHandler(async function(config) {
+      google.script.run.withSuccessHandler(async function(payload) {
+        let config = payload.uiConfig;
             if (config.appStatus === "OFF") {
                 await showTypingIndicator(1000, false); appendBotMsg(translations[currentLang].stillSleepingMsg);
                 sendBtn.disabled = false; sendBtn.innerText = translations[currentLang].wakeBtn;
@@ -3449,7 +3454,7 @@ function getDynamicSystemLostMsg() {
                 statusDot.className = 'w-3 h-3 bg-green-500 rounded-full pulse-anim shadow-[0_0_10px_#22c55e] shrink-0';
                 await showTypingIndicator(1200, false); appendBotMsg(translations[currentLang].awakeMsg); resetAfkTimer();
             }
-        }).getUIConfig();
+        }).getInitialAppPayload(currentLang);
     }
 
     // --- BẮT ĐẦU ĐOẠN CODE THAY THẾ ---
@@ -3560,184 +3565,162 @@ function handleInputTyping() {
       if (userMessageBuffer.length >= BUFFER_LIMIT) flushMessageBuffer(); 
       else {
           if (userMessageBuffer.length === BUFFER_LIMIT - 1) chatBox.insertAdjacentHTML('beforeend', `<div class="text-[10px] text-center text-gray-400 mt-1 italic">${translations[currentLang].spamWarning}</div>`);
-          typingTimer = setTimeout(flushMessageBuffer, 4000); 
+          typingTimer = setTimeout(flushMessageBuffer, 3000); 
       }
     }
 
     function flushMessageBuffer() {
-      if (userMessageBuffer.length === 0) return;
-      clearTimeout(typingTimer); clearTimeout(inputIdleTimer);
-      if (currentReceiptDiv) { currentReceiptDiv.innerText = translations[currentLang].read; previousReceiptDiv = currentReceiptDiv; }
+    if (userMessageBuffer.length === 0) return;
+    clearTimeout(typingTimer); clearTimeout(inputIdleTimer);
+    if (currentReceiptDiv) { currentReceiptDiv.innerText = translations[currentLang].read; previousReceiptDiv = currentReceiptDiv; }
       
-      const combinedMessage = userMessageBuffer.join('\n'); userMessageBuffer = []; currentBubblesContainer = null; 
-      inputField.disabled = true; sendBtn.disabled = true; sendBtn.innerText = "...";
-      chatContextHistory.push({role: "user", text: combinedMessage});
-      localStorage.setItem('peih_context_' + currentSessionId, JSON.stringify(chatContextHistory));
-      const typingId = 'typing-' + Date.now();
-      chatBox.insertAdjacentHTML('beforeend', `<div id="${typingId}" class="flex items-end gap-1.5 w-full mb-1 mt-4"><img src="${getAvatarUrl()}" class="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm"><div class="rounded-[24px] px-4 py-3 flex gap-1 items-center shadow-sm h-[38px]" style="background-color: var(--bot-msg-bg); border: 1px solid var(--glass-border);"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`);
-      chatBox.scrollTop = chatBox.scrollHeight;
-      // ==========================================
-      // GỬI TIN NHẮN ẨN DANH CHO HÒA HIỆP (BYPASS AI, BẮN TELEGRAM)
-      // ==========================================
-      if (combinedMessage.startsWith('@Hiệp: ')) {
-          const realSecretMsg = combinedMessage.substring(7).trim(); // Cắt bỏ chữ @Hiệp:
-          
-          // GỌI GOOGLE SCRIPT MỚI ĐỂ BẮN TELEGRAM VÀ LƯU SHEET NGẦM
-          google.script.run.sendSecretMessage(currentSessionId, realSecretMsg, clientCity || "Không rõ", clientLat, clientLon);
+    const combinedMessage = userMessageBuffer.join('\n'); userMessageBuffer = []; currentBubblesContainer = null; 
+    inputField.disabled = true; sendBtn.disabled = true; sendBtn.innerText = "...";
+    chatContextHistory.push({role: "user", text: combinedMessage});
+    localStorage.setItem('peih_context_' + currentSessionId, JSON.stringify(chatContextHistory));
+    
+    const typingId = 'typing-' + Date.now();
+    chatBox.insertAdjacentHTML('beforeend', `<div id="${typingId}" class="flex items-end gap-1.5 w-full mb-1 mt-4"><img src="${getAvatarUrl()}" class="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm"><div class="rounded-[24px] px-4 py-3 flex gap-1 items-center shadow-sm h-[38px]" style="background-color: var(--bot-msg-bg); border: 1px solid var(--glass-border);"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`);
+    chatBox.scrollTop = chatBox.scrollHeight;
 
-          // Dọn UI
-          const typingEl = document.getElementById(typingId); if (typingEl) typingEl.remove();
-          inputField.disabled = false; sendBtn.disabled = false; sendBtn.innerText = translations[currentLang].sendBtn; 
-          
-          // Trả màu viền Xanh ngọc về bình thường
-          const glowContainer = inputField.closest('.input-glow-container');
-          glowContainer.classList.remove('direct-msg-glow');
-          if (window.currentRealName && window.currentRealName.trim() !== "") {
-              inputField.placeholder = translations[currentLang].placeholderWithName.replace('{name}', window.currentRealName);
-          } else {
-              inputField.placeholder = translations[currentLang].placeholder;
-          }
+    // GỬI TIN NHẮN ẨN DANH (@Hiệp)
+    if (combinedMessage.startsWith('@Hiệp: ')) {
+        const realSecretMsg = combinedMessage.substring(7).trim(); 
+        google.script.run.sendSecretMessage(currentSessionId, realSecretMsg, clientCity || "Không rõ", clientLat, clientLon);
+        const typingEl = document.getElementById(typingId); if (typingEl) typingEl.remove();
+        inputField.disabled = false; sendBtn.disabled = false; sendBtn.innerText = translations[currentLang].sendBtn; 
+        
+        const glowContainer = inputField.closest('.input-glow-container');
+        glowContainer.classList.remove('direct-msg-glow');
+        inputField.placeholder = (window.currentRealName && window.currentRealName.trim() !== "") 
+            ? translations[currentLang].placeholderWithName.replace('{name}', window.currentRealName) 
+            : translations[currentLang].placeholder;
 
-          inputField.focus(); resetAfkTimer();
-          
-          // Bot tự đáp câu thành công (không gọi Gemini)
-          appendBotMsg(translations[currentLang].secretSuccess, 0, 1, false, false);
-          return; // DỪNG LUÔN Ở ĐÂY!
-      }
+        inputField.focus(); resetAfkTimer();
+        appendBotMsg(translations[currentLang].secretSuccess, 0, 1, false, false);
+        return; 
+    }
       
-      // ==========================================
-      // 1. NẾU ĐANG GỌI ỐNG BƠ HOẶC BỊ ADMIN CHẶN AI -> Bắn Firebase và DỪNG!
-      // ==========================================
-      if (isHotlineMode || isAIBlockedByAdmin) {
-          // Ghi Sheet như cũ
-          google.script.run.saveChatLogToSheet(currentSessionId, 'Khách (Ống Bơ/Bị Chặn AI)', combinedMessage, clientCity || "Không rõ", clientLat, clientLon, false);
-          
-          // Gửi lên Firebase cho Admin
-          const updateId = Date.now();
-          database.ref(`chats/${currentSessionId}/${updateId}`).set({
-              sender: 'user',
-              text: combinedMessage,
-              timestamp: updateId
-          });
-          
-          // Báo cập nhật thời gian hoạt động
-          database.ref(`status/${currentSessionId}`).update({ last_active: Date.now() });
+    // GỌI ỐNG BƠ HOẶC BỊ CHẶN AI
+    if (isHotlineMode || isAIBlockedByAdmin) {
+        google.script.run.saveChatLogToSheet(currentSessionId, 'Khách (Ống Bơ/Bị Chặn AI)', combinedMessage, clientCity || "Không rõ", clientLat, clientLon, false);
+        const updateId = Date.now();
+        database.ref(`chats/${currentSessionId}/${updateId}`).set({ sender: 'user', text: combinedMessage, timestamp: updateId });
+        database.ref(`status/${currentSessionId}`).update({ last_active: Date.now() });
 
-          const typingEl = document.getElementById(typingId); if (typingEl) typingEl.remove();
-          inputField.disabled = false; sendBtn.disabled = false; sendBtn.innerText = translations[currentLang].sendBtn; 
-          inputField.focus(); resetAfkTimer();
-          return; // Lệnh return này khóa chặn không cho gọi Gemini AI
-      }
+        const typingEl = document.getElementById(typingId); if (typingEl) typingEl.remove();
+        inputField.disabled = false; sendBtn.disabled = false; sendBtn.innerText = translations[currentLang].sendBtn; 
+        inputField.focus(); resetAfkTimer();
+        return; 
+    }
 
-      // ==========================================
-      // 2. NẾU AI KHÔNG BỊ CHẶN -> GỌI API GEMINI BÌNH THƯỜNG
-      // ==========================================
-      google.script.run.withFailureHandler(function(err){ console.error("Lỗi:", err); }).saveChatLogToSheet(currentSessionId, 'Khách', combinedMessage, clientCity || "Không biết", clientLat, clientLon, false);
-      
-      // Bắn tin nhắn User lên Firebase cho Admin "xem lén" lúc AI đang rep
-      const userUpdateId = Date.now();
-      database.ref(`chats/${currentSessionId}/${userUpdateId}`).set({ sender: 'user', text: combinedMessage, timestamp: userUpdateId });
-      database.ref(`status/${currentSessionId}`).update({ last_active: Date.now() });
-
-      clearTimeout(failsafeTimer);
-      failsafeTimer = setTimeout(() => {
-          const typingEl = document.getElementById(typingId);
-          if (typingEl) typingEl.remove(); 
-          inputField.disabled = false; sendBtn.disabled = false; sendBtn.innerText = translations[currentLang].sendBtn;
-          const wrapper = document.getElementById('main-chat-wrapper');
-          wrapper.classList.add('error-shake');
-          setTimeout(() => wrapper.classList.remove('error-shake'), 500);
-          appendBotMsg(translations[currentLang].timeoutMsg);
-          chatContextHistory.pop(); 
-      }, 60000); 
-
-      let cmd = "";
-      if (currentLang === 'vi') cmd = "NGÔN NGỮ: Tiếng Việt. (Yêu cầu: Trả lời tự nhiên, ngắt dòng bằng \\n).";
-      else if (currentLang === 'en') cmd = "STRICT LANGUAGE: English. (Requirement: You MUST reply 100% in English. Chat naturally, use \\n for line breaks).";
-      else if (currentLang === 'ja') cmd = "言語規制：日本語のみ。(要求：必ず日本語で返信してください。自然な会話形式で、\\nを使用して改行してください).";
-      
-      if (isMusicPlaying) cmd += " [BỐI CẢNH ẨN: Người đang nghe bài nhạc do bạn sáng tác. Hãy chill và hỏi cảm nhận].";
-      if (document.getElementById('main-chat-wrapper').classList.contains('zelda-mode')) cmd += " [BỐI CẢNH: Zelda: Tears of the Kingdom. Hyrule].";
-      if (document.getElementById('main-chat-wrapper').classList.contains('starbucks-mode')) cmd += " [BỐI CẢNH: Starbucks Reserve].";
-      
-      const now = new Date();
-      const dayNames = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
-      const clientTime = `${now.getHours()}:${now.getMinutes() < 10 ? '0' : ''}${now.getMinutes()}, ngày ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} (${dayNames[now.getDay()]})`;
-      const clientContext = { time: clientTime, lat: clientLat, lon: clientLon, city: clientCity, isDoraemon: document.body.classList.contains('doraemon-mode') };
-
-      google.script.run.withSuccessHandler(async function(botResponse) {
+    // LÀN ƯU TIÊN: GỌI API GEMINI NGAY VÀ LUÔN
     clearTimeout(failsafeTimer);
-    const typingEl = document.getElementById(typingId); if (typingEl) typingEl.remove();
-// BẮT ĐẦU: XỬ LÝ TRIGGER ẨN DO AI GỌI
-    if (botResponse.includes("TRIGGER_STARBUCKS|")) {
-        botResponse = botResponse.replace("TRIGGER_STARBUCKS|", "");
-        triggerStarbucksEgg(true); 
-    }
-    else if (botResponse.includes("TRIGGER_ZELDA|")) {
-        botResponse = botResponse.replace("TRIGGER_ZELDA|", "");
-        triggerZeldaEgg(true); 
-    }
-    else if (botResponse.includes("TRIGGER_MUSIC|")) {
-        botResponse = botResponse.replace("TRIGGER_MUSIC|", "");
-        triggerMusicEgg(true); 
-    }
-    else if (botResponse.includes("TRIGGER_BLUR|")) {
-        botResponse = botResponse.replace("TRIGGER_BLUR|", "");
-        triggerBlurEgg(true); 
-    }
-    // KẾT THÚC: XỬ LÝ TRIGGER ẨN
+    failsafeTimer = setTimeout(() => {
+        const typingEl = document.getElementById(typingId); if (typingEl) typingEl.remove(); 
+        inputField.disabled = false; sendBtn.disabled = false; sendBtn.innerText = translations[currentLang].sendBtn;
+        const wrapper = document.getElementById('main-chat-wrapper');
+        wrapper.classList.add('error-shake');
+        setTimeout(() => wrapper.classList.remove('error-shake'), 500);
+        appendBotMsg(translations[currentLang].timeoutMsg);
+        chatContextHistory.pop(); 
+    }, 60000); 
 
-          if (botResponse.startsWith("RECALL_TRIGGER|")) {
-              botResponse = botResponse.replace("RECALL_TRIGGER|", "");
-              if (chatContextHistory.length > 0) {
-                  for (let i = chatContextHistory.length - 1; i >= 0; i--) {
-                      if (chatContextHistory[i].role === 'user') {
-                          chatContextHistory[i].text = translations[currentLang].toxicRecalled; break;
-                      }
-                  }
-                  localStorage.setItem('peih_context_' + currentSessionId, JSON.stringify(chatContextHistory));
-              }
-              const userGroups = chatBox.querySelectorAll('.user-msg-group');
-              if (userGroups.length > 0) {
-                  const lastGroup = userGroups[userGroups.length - 1];  
-                  lastGroup.classList.add('poof-animation');        
-                  setTimeout(() => {
-                      lastGroup.classList.remove('poof-animation'); lastGroup.style.opacity = "1"; lastGroup.style.transform = "none";              
-                      lastGroup.innerHTML = `<div class="msg-recalled" style="margin-left: auto; margin-right: 0; text-align: right;">${translations[currentLang].toxicRecalled}</div>`;
-                  }, 400); 
-              }
-          }
-          
-          if (botResponse === "SYSTEM_SLEEP_MODE") {
-              isAppSleeping = true; inputField.disabled = true; sendBtn.disabled = false; sendBtn.innerText = translations[currentLang].wakeBtn;
-              statusDot.className = 'w-3 h-3 bg-red-500 rounded-full shrink-0';
-              await showTypingIndicator(1000, false); appendBotMsg(translations[currentLang].sleepyMsg1, 0, 2);
-              await showTypingIndicator(1500, true); appendBotMsg(translations[currentLang].sleepyMsg2, 1, 2);
-              setTimeout(() => { appendSystemMsg(translations[currentLang].sleepMsg); }, 1200);
-              chatContextHistory.pop(); return; 
-          }
+    let cmd = "";
+    if (currentLang === 'vi') cmd = "NGÔN NGỮ: Tiếng Việt. (Yêu cầu: Trả lời tự nhiên, ngắt dòng bằng \\n).";
+    else if (currentLang === 'en') cmd = "STRICT LANGUAGE: English. (Requirement: You MUST reply 100% in English. Chat naturally, use \\n for line breaks).";
+    else if (currentLang === 'ja') cmd = "言語規制：日本語のみ。(要求：必ず日本語で返信してください。自然な会話形式で、\\nを使用して改行してください).";
+      
+    if (isMusicPlaying) cmd += " [BỐI CẢNH ẨN: Người đang nghe bài nhạc do bạn sáng tác. Hãy chill và hỏi cảm nhận].";
+    if (document.getElementById('main-chat-wrapper').classList.contains('zelda-mode')) cmd += " [BỐI CẢNH: Zelda: Tears of the Kingdom. Hyrule].";
+    if (document.getElementById('main-chat-wrapper').classList.contains('starbucks-mode')) cmd += " [BỐI CẢNH: Starbucks Reserve].";
+      
+    const now = new Date();
+    const dayNames = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+    const clientTime = `${now.getHours()}:${now.getMinutes() < 10 ? '0' : ''}${now.getMinutes()}, ngày ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} (${dayNames[now.getDay()]})`;
+    const clientContext = { time: clientTime, lat: clientLat, lon: clientLon, city: clientCity, isDoraemon: document.body.classList.contains('doraemon-mode') };
 
-          // In tin nhắn của AI
-          const messages = botResponse.replace(/\\n/g, '\n').split('\n').filter(msg => msg.trim() !== '');
-          for (let i = 0; i < messages.length; i++) { 
-              if (i > 0) await showTypingIndicator(800 + Math.random() * 800, true); 
-              appendBotMsg(messages[i], i, messages.length, false, false); 
-          }
+    // GỌI LLM:
+    google.script.run.withSuccessHandler(async function(botResponse) {
+        clearTimeout(failsafeTimer);
+        const typingEl = document.getElementById(typingId); if (typingEl) typingEl.remove();
+
+        if (botResponse.includes("TRIGGER_STARBUCKS|")) { botResponse = botResponse.replace("TRIGGER_STARBUCKS|", ""); triggerStarbucksEgg(true); }
+        else if (botResponse.includes("TRIGGER_ZELDA|")) { botResponse = botResponse.replace("TRIGGER_ZELDA|", ""); triggerZeldaEgg(true); }
+        else if (botResponse.includes("TRIGGER_MUSIC|")) { botResponse = botResponse.replace("TRIGGER_MUSIC|", ""); triggerMusicEgg(true); }
+        else if (botResponse.includes("TRIGGER_BLUR|")) { botResponse = botResponse.replace("TRIGGER_BLUR|", ""); triggerBlurEgg(true); }
+
+        if (botResponse.startsWith("RECALL_TRIGGER|")) {
+            botResponse = botResponse.replace("RECALL_TRIGGER|", "");
+            if (chatContextHistory.length > 0) {
+                for (let i = chatContextHistory.length - 1; i >= 0; i--) {
+                    if (chatContextHistory[i].role === 'user') { chatContextHistory[i].text = translations[currentLang].toxicRecalled; break; }
+                }
+                localStorage.setItem('peih_context_' + currentSessionId, JSON.stringify(chatContextHistory));
+            }
+            const userGroups = chatBox.querySelectorAll('.user-msg-group');
+            if (userGroups.length > 0) {
+                const lastGroup = userGroups[userGroups.length - 1];  
+                lastGroup.classList.add('poof-animation');        
+                setTimeout(() => {
+                    lastGroup.classList.remove('poof-animation'); lastGroup.style.opacity = "1"; lastGroup.style.transform = "none";              
+                    lastGroup.innerHTML = `<div class="msg-recalled" style="margin-left: auto; margin-right: 0; text-align: right;">${translations[currentLang].toxicRecalled}</div>`;
+                }, 400); 
+            }
+        }
           
-          chatContextHistory.push({role: "model", text: botResponse}); if(chatContextHistory.length > 30) chatContextHistory = chatContextHistory.slice(-30);
-          localStorage.setItem('peih_context_' + currentSessionId, JSON.stringify(chatContextHistory));
-          google.script.run.saveChatLogToSheet(currentSessionId, 'Peih AI', botResponse, clientCity || "Không rõ", clientLat, clientLon, false);
-          inputField.disabled = false; sendBtn.disabled = false; sendBtn.innerText = translations[currentLang].sendBtn; inputField.focus(); resetAfkTimer();
-      }).withFailureHandler(function() {
-          clearTimeout(failsafeTimer);
-          const typingEl = document.getElementById(typingId); if (typingEl) typingEl.remove();
-          const wrapper = document.getElementById('main-chat-wrapper');
-          wrapper.classList.add('error-shake');
-          setTimeout(() => wrapper.classList.remove('error-shake'), 500);
-          appendBotMsg(translations[currentLang].offlineMsg); chatContextHistory.pop();
-          inputField.disabled = false; sendBtn.disabled = false; sendBtn.innerText = translations[currentLang].sendBtn; 
-      }).getBotResponse(currentSessionId, chatContextHistory, cmd, currentLang, clientContext, currentPersonalityName); 
-    }
+        if (botResponse === "SYSTEM_SLEEP_MODE") {
+            isAppSleeping = true; inputField.disabled = true; sendBtn.disabled = false; sendBtn.innerText = translations[currentLang].wakeBtn;
+            statusDot.className = 'w-3 h-3 bg-red-500 rounded-full shrink-0';
+            await showTypingIndicator(1000, false); appendBotMsg(translations[currentLang].sleepyMsg1, 0, 2);
+            await showTypingIndicator(1500, true); appendBotMsg(translations[currentLang].sleepyMsg2, 1, 2);
+            setTimeout(() => { appendSystemMsg(translations[currentLang].sleepMsg); }, 1200);
+            chatContextHistory.pop(); return; 
+        }
+
+        const messages = botResponse.replace(/\\n/g, '\n').split('\n').filter(msg => msg.trim() !== '');
+        for (let i = 0; i < messages.length; i++) { 
+            if (i > 0) await showTypingIndicator(800 + Math.random() * 800, true); 
+            appendBotMsg(messages[i], i, messages.length, false, false); 
+        }
+          
+        chatContextHistory.push({role: "model", text: botResponse}); if(chatContextHistory.length > 30) chatContextHistory = chatContextHistory.slice(-30);
+        localStorage.setItem('peih_context_' + currentSessionId, JSON.stringify(chatContextHistory));
+        inputField.disabled = false; sendBtn.disabled = false; sendBtn.innerText = translations[currentLang].sendBtn; inputField.focus(); resetAfkTimer();
+
+        // ------ PHẦN LÀM SAU LƯNG KHÁCH (HẬU CẦN) ------
+        // Lưu Log của Bot
+        setTimeout(() => {
+            google.script.run.saveChatLogToSheet(currentSessionId, 'Peih AI', botResponse, clientCity || "Không rõ", clientLat, clientLon, false);
+        }, 1000);
+
+        // Tóm tắt ngầm nếu đến cữ
+        if (userMsgCountForSummary % 7 === 0) {
+            setTimeout(() => {
+                const recentContext = chatContextHistory.slice(-12).map(m => `${m.role}: ${m.text}`).join('\n');
+                google.script.run.doSummaryInBackground(currentSessionId, recentContext);
+            }, 3000);
+        }
+    }).withFailureHandler(function() {
+        clearTimeout(failsafeTimer);
+        const typingEl = document.getElementById(typingId); if (typingEl) typingEl.remove();
+        const wrapper = document.getElementById('main-chat-wrapper');
+        wrapper.classList.add('error-shake');
+        setTimeout(() => wrapper.classList.remove('error-shake'), 500);
+        appendBotMsg(translations[currentLang].offlineMsg); chatContextHistory.pop();
+        inputField.disabled = false; sendBtn.disabled = false; sendBtn.innerText = translations[currentLang].sendBtn; 
+    }).getBotResponse(currentSessionId, chatContextHistory, cmd, currentLang, clientContext, currentPersonalityName); 
+    
+    // GỬI LÊN FIREBASE ĐỂ ADMIN THEO DÕI REALTIME
+    const userUpdateId = Date.now();
+    database.ref(`chats/${currentSessionId}/${userUpdateId}`).set({ sender: 'user', text: combinedMessage, timestamp: userUpdateId });
+    database.ref(`status/${currentSessionId}`).update({ last_active: Date.now() });
+
+    // HẬU CẦN CỦA KHÁCH: Lưu log khách (Delay 50ms để AI chạy trước)
+    setTimeout(() => {
+        google.script.run.saveChatLogToSheet(currentSessionId, 'Khách', combinedMessage, clientCity || "Không biết", clientLat, clientLon, false);
+    }, 50);
+}
     // ================= LOGIC 3 MÓN HARDCORE =================
 
     // 2. Sổ Đặt Lịch (Gửi về GG Sheets)
@@ -4206,13 +4189,13 @@ document.addEventListener('click', function(e) {
             inputField.placeholder = translations[currentLang].reconnecting;
             
             // Âm thầm gọi lại Google Script để nạp dữ liệu bị lỡ
-            google.script.run.withSuccessHandler(async function(config) {
+            google.script.run.withSuccessHandler(async function(payload) {
                 window.isSystemHalted = false; // Mở khóa hệ thống
                 
                 // Quét và xóa sạch các câu báo lỗi màu đỏ trên màn hình
                 const sysBubbles = document.querySelectorAll('.system-bubble');
                 sysBubbles.forEach(b => { if (b.innerText.includes("⚠️")) b.remove(); });
-
+                let config = payload.uiConfig;
                 globalUIConfig = config;
                 
                 if(config.appStatus === "OFF") {
@@ -4247,7 +4230,7 @@ document.addEventListener('click', function(e) {
                 }
             }).withFailureHandler(function() {
                 inputField.placeholder = translations[currentLang].reconnectFailed;
-            }).getUIConfig();
+            }).getInitialAppPayload(currentLang);
         }
     });
     /* ================= STORY 24H LOGIC (Tối ưu RAM) ================= */
