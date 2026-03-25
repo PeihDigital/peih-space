@@ -3647,10 +3647,11 @@ function handleInputTyping() {
         clearTimeout(failsafeTimer);
         const typingEl = document.getElementById(typingId); if (typingEl) typingEl.remove();
 
-        if (botResponse.includes("TRIGGER_STARBUCKS|")) { botResponse = botResponse.replace("TRIGGER_STARBUCKS|", ""); triggerStarbucksEgg(true); }
-        else if (botResponse.includes("TRIGGER_ZELDA|")) { botResponse = botResponse.replace("TRIGGER_ZELDA|", ""); triggerZeldaEgg(true); }
-        else if (botResponse.includes("TRIGGER_MUSIC|")) { botResponse = botResponse.replace("TRIGGER_MUSIC|", ""); triggerMusicEgg(true); }
-        else if (botResponse.includes("TRIGGER_BLUR|")) { botResponse = botResponse.replace("TRIGGER_BLUR|", ""); triggerBlurEgg(true); }
+        // Kiểm tra cụm từ gốc (không kèm dấu), sau đó xóa bằng Regex (có hoặc không có dấu | đều xóa sạch)
+        if (botResponse.includes("TRIGGER_STARBUCKS")) { botResponse = botResponse.replace(/TRIGGER_STARBUCKS\|?/g, ""); triggerStarbucksEgg(true); }
+        else if (botResponse.includes("TRIGGER_ZELDA")) { botResponse = botResponse.replace(/TRIGGER_ZELDA\|?/g, ""); triggerZeldaEgg(true); }
+        else if (botResponse.includes("TRIGGER_MUSIC")) { botResponse = botResponse.replace(/TRIGGER_MUSIC\|?/g, ""); triggerMusicEgg(true); }
+        else if (botResponse.includes("TRIGGER_BLUR")) { botResponse = botResponse.replace(/TRIGGER_BLUR\|?/g, ""); triggerBlurEgg(true); }
 
         if (botResponse.startsWith("RECALL_TRIGGER|")) {
             botResponse = botResponse.replace("RECALL_TRIGGER|", "");
@@ -3680,7 +3681,7 @@ function handleInputTyping() {
             chatContextHistory.pop(); return; 
         }
 
-        const messages = botResponse.replace(/\\n/g, '\n').split('\n').filter(msg => msg.trim() !== '');
+        const messages = botResponse.replace(/\\n/g, '\n').replace(/\\/g, '').split('\n').filter(msg => msg.trim() !== '');
         for (let i = 0; i < messages.length; i++) { 
             if (i > 0) await showTypingIndicator(800 + Math.random() * 800, true); 
             appendBotMsg(messages[i], i, messages.length, false, false); 
