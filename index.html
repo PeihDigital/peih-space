@@ -3536,7 +3536,7 @@ function getDynamicSystemLostMsg() {
     });
     
     html += "</span>";
-    html += `<button onclick="forceReconnect()" style="margin-top: 12px; padding: 6px 16px; background: var(--text-main); color: var(--bg-color); border-radius: 20px; font-weight: bold; font-size: 12px; cursor: pointer; transition: opacity 0.3s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">Thử lại / Retry</button>`;
+    html += `<button onclick="forceReconnect(this)" style="margin-top: 12px; padding: 6px 16px; background: var(--text-main); color: var(--bg-color); border-radius: 20px; font-weight: bold; font-size: 12px; cursor: pointer; transition: opacity 0.3s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">Thử lại / Retry</button>`;
     return html;
 }
     window.forceReconnect = function(btn) {
