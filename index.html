@@ -4284,7 +4284,17 @@ function handleThreadLike(element, rowIndex) {
     svg.setAttribute('fill', 'currentColor');
     svg.style.transform = 'scale(1.3)';
     setTimeout(() => svg.style.transform = 'scale(1)', 200);
+    
+    // 3. Cộng số an toàn từ biến Cache gốc (không sợ lỗi 2k + 1)
+    if (window.cachedThreadsData) {
+        let post = window.cachedThreadsData.find(p => p.rowIndex === rowIndex);
+        if (post) {
+            post.likes += 1; // Cộng vào data gốc
+            element.querySelector('.like-count').innerText = formatCount(post.likes); // Gắn chữ 2.1k lên UI
+        }
+    }
 
+    // 4. Báo cho Sheets biết
     google.script.run.addThreadLike(rowIndex);
 }
 
@@ -4312,15 +4322,18 @@ function handleThreadComment(element, rowIndex) {
     }
 }
 
+// 2. Gửi bình luận và Gọi AI Trả lời
+// 2. Gửi bình luận và Gọi AI Trả lời
 function submitInlineComment(rowIndex) {
     const input = document.getElementById(`comment-input-${rowIndex}`);
     const text = input.value.trim();
     if (!text) { input.focus(); return; }
 
-    input.blur();
+    input.blur(); // Ẩn bàn phím điện thoại
+
     const list = document.getElementById(`comment-list-${rowIndex}`);
     
-    // A. In bình luận của Khách
+    // A. In bình luận của Khách (Đã xóa tên "Bạn", chỉ hiện text)
     const newCommentHtml = `
         <div class="flex gap-2 items-start animate-fade-in">
             <div class="w-6 h-6 rounded-full bg-gray-500/20 flex items-center justify-center shrink-0 border border-gray-500/20 mt-0.5">
@@ -4334,7 +4347,7 @@ function submitInlineComment(rowIndex) {
     list.insertAdjacentHTML('beforeend', newCommentHtml);
     input.value = '';
 
-    // B. CHỈ CỘNG SỐ LƯỢNG CHO KHÁCH (Giữ lại đoạn này ở đây)
+    // Cộng số đếm tạm trên UI
     if (window.cachedThreadsData) {
         let post = window.cachedThreadsData.find(p => p.rowIndex === rowIndex);
         if (post) {
@@ -4345,7 +4358,7 @@ function submitInlineComment(rowIndex) {
     }
     google.script.run.addThreadComment(rowIndex, text, currentSessionId);
 
-    // C. Hiệu ứng AI Đang Gõ
+    // B. Hiệu ứng AI Đang Gõ (Kèm đường kẻ chữ L)
     const typingId = `ai-typing-${Date.now()}`;
     const typingHtml = `
         <div id="${typingId}" class="flex gap-2 items-start animate-fade-in relative ml-8 mt-1">
@@ -4358,12 +4371,13 @@ function submitInlineComment(rowIndex) {
     `;
     list.insertAdjacentHTML('beforeend', typingHtml);
 
-    // D. Gọi AI Trả lời (ĐÃ XOÁ PHẦN TỰ CỘNG SỐ)
+    // C. Gọi Backend AI xử lý
     google.script.run.withSuccessHandler(function(aiReply) {
         const tEl = document.getElementById(typingId);
-        if (tEl) tEl.remove(); 
+        if (tEl) tEl.remove(); // Xóa icon đang gõ
         
         if (aiReply) {
+            // D. In câu trả lời của AI ra
             const aiCommentHtml = `
                 <div class="flex gap-2 items-start animate-fade-in relative ml-8 mt-1">
                     <div class="reply-connector"></div>
@@ -4375,7 +4389,6 @@ function submitInlineComment(rowIndex) {
                 </div>
             `;
             list.insertAdjacentHTML('beforeend', aiCommentHtml);
-            // KHÔNG CỘNG post.comments Ở ĐÂY NỮA
         }
     }).generateCommentReply(rowIndex, text, currentLang);
 }
