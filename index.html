@@ -1473,8 +1473,8 @@ body.threads-active #profile-avatar-ring.story-ring-viewed::before {
     const thoughtCloud = document.getElementById('thought-cloud');
     const emptySleep = document.getElementById('empty-sleep-state');
     const dreamContainer = document.getElementById('dream-container');
-
-    // --- BẢO TRÌ M1 PRO LOGIC (CHUẨN NGỦ GIẢ) ---
+    window.guestSource = 'direct'; 
+    // --- BẢO TRÌ M1 PRO LOGIC (NGỦ GIẢ) ---
     let matrixTimer = null;
     let terminalTimer = null; 
     const terminalLogLines = []; 
@@ -1836,7 +1836,8 @@ function appendRealAdminMsgToUI(text) {
       const urlParams = new URLSearchParams(window.location.search);
       const referer = urlParams.get('ref') || 'direct';
       google.script.run.trackVisit(referer, clientCity, clientLat, clientLon);
-    } 
+      google.script.run.trackVisit(window.guestSource, clientCity, clientLat, clientLon);
+    }
     const quotes = [
       { vi: '"Cuộc đời không được suy xét là cuộc đời không đáng sống." - Socrates', en: '"The unexamined life is not worth living." - Socrates', ja: '"吟味なき生に、生きる価値なし。" - ソクラテス' },
       { vi: '"Nơi mà ngôn từ thất bại, âm nhạc sẽ lên tiếng." - Hans C. Andersen', en: '"Where words fail, music speaks." - Hans C. Andersen', ja: '"言葉が尽きたところで、音楽が始まる。" - アンデルセン' },
@@ -3543,8 +3544,13 @@ function getDynamicSystemLostMsg() {
     window.isSystemHalted = false;
     changeLang(currentLang, true);
     document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const ref = urlParams.get('ref');
+      if (ref) {
+          window.guestSource = ref;
+          window.history.replaceState({}, document.title, window.location.pathname);
+      }
       loadDailyStories();
-
       checkNightTimeForCoffee(); inputField.placeholder = translations[currentLang].connecting; 
       document.documentElement.style.setProperty('--dora-bread-text', `'${translations[currentLang].cssBread}'`);
 
