@@ -1111,6 +1111,14 @@ body.threads-active #profile-avatar-ring.story-ring-viewed::before {
     0% { transform: translateX(-100%); }
     100% { transform: translateX(300%); }
 }
+#trans-pill .pulse-blue {
+    animation: pill-glow 2s infinite;
+}
+@keyframes pill-glow {
+    0% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+    100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.2); }
+}
   </style>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -1122,6 +1130,18 @@ body.threads-active #profile-avatar-ring.story-ring-viewed::before {
 </button>
 
 <div id="upcoming-warning-bubble" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-[9999] hidden gap-2 px-4 py-2 rounded-full shadow-lg backdrop-blur-md transition-all duration-500 opacity-0 -translate-y-4" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#ef4444;"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg><span id="upcoming-warning-text" class="text-[12px] font-bold tracking-wide whitespace-nowrap"></span></div>
+
+<div id="trans-pill" class="fixed top-5 left-1/2 -translate-x-1/2 z-[1000000] hidden items-center justify-center transition-all duration-300 scale-90 opacity-0">
+    <div class="relative overflow-hidden min-w-[140px] px-5 py-1.5 rounded-full backdrop-blur-xl shadow-2xl flex flex-col items-center justify-center" 
+         style="background: var(--bot-msg-bg); border: 1px solid var(--glass-border);">
+        <div id="pill-content" class="flex items-center gap-2">
+            <span id="pill-text" class="text-[13px] font-bold tracking-wide uppercase" style="color: var(--text-main);"></span>
+        </div>   
+        <div class="absolute bottom-0 left-0 w-full h-[2px] bg-black/5 dark:bg-white/10">
+            <div id="pill-progress" class="h-full bg-blue-500 shadow-[0_0_10px_#3b82f6] transition-all duration-500 w-0"></div>
+        </div>
+    </div>
+</div>
 
 <div id="lang-modal-overlay" class="fixed inset-0 z-[999999] bg-black/60 backdrop-blur-sm hidden flex-col items-center justify-center p-4 opacity-0 transition-opacity duration-300">
       <div class="bg-neutral-900 w-full max-w-sm rounded-3xl border border-neutral-700 shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
@@ -4663,62 +4683,87 @@ function submitManualLanguage() {
 
 function requestCustomLanguage(targetLang, displayName) {
     closeLangModal();
-    const displayEl = document.getElementById('current-lang-display');
-    if(displayEl) displayEl.innerText = displayName || ("🌐 " + targetLang.toUpperCase());
-    
     if (translations[targetLang]) {
         changeLang(targetLang);
         return;
     }
+
+    const pill = document.getElementById('trans-pill');
+    const pillText = document.getElementById('pill-text');
+    const pillProg = document.getElementById('pill-progress');
     
-    const statusEl = document.getElementById('bot-status');
-if(statusEl) {
     const loadingMap = {
-        'it': 'Caricamento delle lingue...',
-        'la': 'Linguae instruuntur...',
-        'tl': 'Kinakarga ang mga wika...',
-        'zh-tw': '正在載入語言...',
-        'my': 'ဘာသာစကားများကို တင်နေသည်...',
-        'fr': 'Chargement des langues...',
-        'ko': '언어 로딩 중...',
-        'zh': '正在加载语言...',
-        'es': 'Cargando idiomas...',
-        'de': 'Sprachen werden geladen...',
-        'th': 'กำลังโหลดภาษา...',
-        'ru': 'Загрузка языков...',
-        'ar': 'جار تحميل اللغات...'
+        'it': 'Caricamento delle lingue',
+        'la': 'Linguae instruuntur',
+        'tl': 'Kinakarga ang mga wika',
+        'zh-tw': '正在載入語言',
+        'my': 'ဘာသာစကားများကို တင်နေသည်',
+        'fr': 'Chargement des langues',
+        'ko': '언어 로딩 중',
+        'zh': '正在加载语言',
+        'es': 'Cargando idiomas',
+        'de': 'Sprachen werden geladen',
+        'th': 'กำลังโหลดภาษา',
+        'ru': 'Загрузка языков',
+        'ar': 'جار تحميل اللغات'
     };
-    statusEl.innerText = loadingMap[targetLang.toLowerCase()] || "Loading languages...";
-}
-    
+
+    if(pill) {
+        pillText.innerHTML = (loadingMap[targetLang.toLowerCase()] || "Loading") + "...";
+        pillProg.style.width = "0%";
+        pill.classList.remove('hidden');
+        pill.classList.add('flex');
+        setTimeout(() => {
+            pill.classList.add('scale-100', 'opacity-100');
+            pillProg.style.width = "70%"; // Chạy trước 70% để tạo cảm giác đang tải
+        }, 10);
+    }
+
     const viKeys = Object.keys(translations['vi']).filter(k => k !== 'dreams');
     const viValues = viKeys.map(k => translations['vi'][k]);
     const viDreams = translations['vi'].dreams;
     const viQuotes = quotes.map(q => q['vi']);
     const viDoraQuotes = doraQuotes.map(q => q['vi']);
-    
     const arraysToTranslate = [viValues, viDreams, viQuotes, viDoraQuotes];
     
     google.script.run.withSuccessHandler(function(results) {
-        const transUI = results[0];
-        const transDreams = results[1];
-        const transQuotes = results[2];
-        const transDoraQuotes = results[3];
+        pillProg.style.width = "100%";
+        pillText.innerHTML = "✓ DONE"; 
         
-        translations[targetLang] = {};
-        for (let i = 0; i < viKeys.length; i++) {
-            translations[targetLang][viKeys[i]] = transUI[i];
+        setTimeout(() => {
+            pill.classList.replace('scale-100', 'scale-90');
+            pill.classList.remove('opacity-100');
+            setTimeout(() => {
+                pill.classList.add('hidden');
+                pill.classList.remove('flex');
+                
+                const transUI = results[0];
+                const transDreams = results[1];
+                const transQuotes = results[2];
+                const transDoraQuotes = results[3];
+                
+                translations[targetLang] = {};
+                for (let i = 0; i < viKeys.length; i++) {
+                    translations[targetLang][viKeys[i]] = transUI[i];
+                }
+                translations[targetLang].dreams = transDreams;
+                
+                for (let i = 0; i < quotes.length; i++) {
+                    quotes[i][targetLang] = transQuotes[i];
+                }
+                for (let i = 0; i < doraQuotes.length; i++) {
+                    doraQuotes[i][targetLang] = transDoraQuotes[i];
+                }
+                
+                changeLang(targetLang);
+            }, 300);
+        }, 500); // Hiện tích xanh trong 0.5s
+
+    }).withFailureHandler(function() {
+        if(pill) {
+            pill.classList.add('hidden');
+            pill.classList.remove('flex', 'opacity-100');
         }
-        translations[targetLang].dreams = transDreams;
-        
-        for (let i = 0; i < quotes.length; i++) {
-            quotes[i][targetLang] = transQuotes[i];
-        }
-        for (let i = 0; i < doraQuotes.length; i++) {
-            doraQuotes[i][targetLang] = transDoraQuotes[i];
-        }
-        
-        changeLang(targetLang);
     }).translateArrays(arraysToTranslate, 'vi', targetLang);
 }
 
