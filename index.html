@@ -3369,17 +3369,20 @@ async function triggerBlurEgg(isFromAI = false) {
 
 function changeLang(lang, isInit = false) {
   let savedLang = lang;
-
   if (!translations[lang]) {
     savedLang = lang;
     lang = 'en';
-    
-    setTimeout(() => {
-      window.isAutoFetchingLang = true;
-      requestCustomLanguage(savedLang, '🌐 ' + savedLang.toUpperCase());
-    }, 2500);
+    const checkWelcome = setInterval(() => {
+      const welcome = document.getElementById('welcome-screen');
+      if (welcome && welcome.classList.contains('hidden')) {
+        clearInterval(checkWelcome);
+        setTimeout(() => {
+          window.isAutoFetchingLang = true;
+          requestCustomLanguage(savedLang, '🌐 ' + savedLang.toUpperCase());
+        }, 500);
+      }
+    }, 500);
   }
-
   if (window.isAutoFetchingLang && translations[lang] && lang !== 'en') {
     isInit = true;
     window.isAutoFetchingLang = false;
