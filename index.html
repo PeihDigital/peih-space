@@ -3372,9 +3372,12 @@ function changeLang(lang, isInit = false) {
   if (!translations[lang]) {
     savedLang = lang;
     lang = 'en';
+    let attempts = 0;
     const checkWelcome = setInterval(() => {
+      attempts++;
       const welcome = document.getElementById('welcome-screen');
-      if (welcome && welcome.classList.contains('hidden')) {
+      
+      if ((welcome && welcome.classList.contains('hidden')) || attempts > 20) {
         clearInterval(checkWelcome);
         setTimeout(() => {
           window.isAutoFetchingLang = true;
