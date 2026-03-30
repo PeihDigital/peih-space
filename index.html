@@ -3369,9 +3369,12 @@ async function triggerBlurEgg(isFromAI = false) {
 
 function changeLang(lang, isInit = false) {
   let savedLang = lang;
+
   if (!translations[lang]) {
     savedLang = lang;
     lang = 'en';
+    window.isAutoFetchingLang = true;
+    window.wasInitLoad = isInit; 
     let attempts = 0;
     const checkWelcome = setInterval(() => {
       attempts++;
@@ -3380,17 +3383,18 @@ function changeLang(lang, isInit = false) {
       if ((welcome && welcome.classList.contains('hidden')) || attempts > 20) {
         clearInterval(checkWelcome);
         setTimeout(() => {
-          window.isAutoFetchingLang = true;
           requestCustomLanguage(savedLang, '🌐 ' + savedLang.toUpperCase());
         }, 500);
       }
     }, 500);
   }
   if (window.isAutoFetchingLang && translations[lang] && lang !== 'en') {
-    isInit = true;
+    isInit = window.wasInitLoad !== undefined ? window.wasInitLoad : true;
     window.isAutoFetchingLang = false;
+    if (isInit && typeof chatContextHistory !== 'undefined' && chatContextHistory.length === 0) {
+        setTimeout(startAutoChat, 500);
+    }
   }
-
   currentLang = lang;
   try { localStorage.setItem('peih_lang', savedLang); } catch(e) {}
 
@@ -3605,6 +3609,7 @@ function appendBotMsg(text, index = 0, total = 1, isEgg = false, isRealPeih = fa
     }
 
     async function startAutoChat() {
+      if (window.isAutoFetchingLang) return;
       autoChatActive = true; chatSequenceId++; const mySeq = chatSequenceId; 
       await new Promise(r => setTimeout(r, 500)); if (mySeq !== chatSequenceId) return; 
       if(checkTimeForSleep()) { triggerFakeSleep(); autoChatActive = false; return; }
