@@ -4663,15 +4663,20 @@ async function requestCustomLanguage(targetLang, displayName) {
     const pillText = document.getElementById('pill-text');
     const pillProg = document.getElementById('pill-progress');
 
-    if (finalLang.length > 2) {
+    window.isAutoFetchingLang = true;
+
+    let isFromModal = displayName && !displayName.startsWith('🌐');
+
+    if (isFromModal) {
+        window.customTempFlag = displayName.split(' ')[0]; 
+        localStorage.setItem('peih_custom_flag_' + finalLang, window.customTempFlag);
+    } else {
         if (pill) {
             pillText.innerHTML = "Identifying language...";
             pillProg.style.width = "50%";
             pill.classList.remove('hidden');
             pill.classList.add('flex');
-            setTimeout(() => {
-                pill.classList.add('scale-100', 'opacity-100');
-            }, 10);
+            setTimeout(() => { pill.classList.add('scale-100', 'opacity-100'); }, 10);
         }
         
         let detected = await new Promise(resolve => {
@@ -4686,10 +4691,8 @@ async function requestCustomLanguage(targetLang, displayName) {
     }
 
     if (translations[finalLang]) {
-        if (pill) {
-            pill.classList.add('hidden');
-            pill.classList.remove('flex', 'opacity-100');
-        }
+        if (pill) { pill.classList.add('hidden'); pill.classList.remove('flex', 'opacity-100'); }
+        window.isAutoFetchingLang = false;
         changeLang(finalLang);
         return;
     }
@@ -4709,40 +4712,31 @@ async function requestCustomLanguage(targetLang, displayName) {
         'ru': 'Загрузка языков',
         'ar': 'جار تحميل اللغات'
     };
-
-    if(pill) {
+    if (pill) {
         pillText.innerHTML = (loadingMap[finalLang] || "Loading") + "...";
-        if (pill.classList.contains('hidden')) {
-            pillProg.style.width = "0%";
-            pill.classList.remove('hidden');
-            pill.classList.add('flex');
-            setTimeout(() => {
-                pill.classList.add('scale-100', 'opacity-100');
-                pillProg.style.width = "80%";
-            }, 10);
-        } else {
-            pillProg.style.width = "80%";
-        }
+        pill.classList.remove('hidden');
+        pill.classList.add('flex');
+        setTimeout(() => { pill.classList.add('scale-100', 'opacity-100'); pillProg.style.width = "80%"; }, 10);
     }
 
     google.script.run.withSuccessHandler(function(package) {
         if (package.error) {
-            if(pill) { pill.classList.add('hidden'); pill.classList.remove('flex', 'opacity-100'); }
-            alert("Translation failed. Please try again.");
+            window.isAutoFetchingLang = false;
+            if (pill) { pill.classList.add('hidden'); pill.classList.remove('flex', 'opacity-100'); }
             return;
         }
 
         translations[finalLang] = package.ui;
-        translations[finalLang].customFlag = package.flag;
-        window.isAutoFetchingLang = false;
-        package.quotes.forEach((text, idx) => {
-            if (quotes[idx]) quotes[idx][finalLang] = text;
-        });
-        package.doraQuotes.forEach((text, idx) => {
-            if (doraQuotes[idx]) doraQuotes[idx][finalLang] = text;
-        });
+        translations[finalLang].customFlag = package.flag || window.customTempFlag;
+        
+        if (package.quotes) {
+            package.quotes.forEach((text, idx) => { if (quotes[idx]) quotes[idx][finalLang] = text; });
+        }
+        if (package.doraQuotes) {
+            package.doraQuotes.forEach((text, idx) => { if (doraQuotes[idx]) doraQuotes[idx][finalLang] = text; });
+        }
 
-        if(pill) {
+        if (pill) {
             pillProg.style.width = "100%";
             pillText.innerHTML = "✓ DONE";
             pillText.style.color = "#22c55e";
@@ -4753,17 +4747,17 @@ async function requestCustomLanguage(targetLang, displayName) {
                     pill.classList.add('hidden');
                     pill.classList.remove('flex');
                     pillText.style.color = "var(--bot-msg-bg)";
+                    window.isAutoFetchingLang = false; 
                     changeLang(finalLang);
                 }, 300);
             }, 600);
         } else {
+            window.isAutoFetchingLang = false;
             changeLang(finalLang);
         }
     }).withFailureHandler(function() {
-        if(pill) {
-            pill.classList.add('hidden');
-            pill.classList.remove('flex', 'opacity-100');
-        }
+        window.isAutoFetchingLang = false;
+        if (pill) { pill.classList.add('hidden'); pill.classList.remove('flex', 'opacity-100'); }
     }).translateFullPackage(finalLang, window.customTempFlag);
 }
 
