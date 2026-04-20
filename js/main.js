@@ -1,4 +1,3 @@
-    <script> 
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycby733s7oboPlU-UFYo2rLQ08OaIGawK3Uxh0Fz0_GO4GalLlTFDp-9z5GqWnlDb-YKRpw/exec"; 
 
     if (typeof google === 'undefined') {
@@ -3382,4 +3381,3 @@ function translateThread(rowIndex) {
         }, 2000);
     }).translateSingleText(originalText, currentLang);
 }
-  </script>
