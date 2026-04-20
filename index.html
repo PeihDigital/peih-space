@@ -449,11 +449,8 @@ body.doraemon-mode .image-flipper {
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }
     @keyframes sneeze-drop {
-      /* Từ 70 độ cộng thêm 30 độ thành 100 độ */
       0% { transform: translate(0, 0) rotate(100deg) scale(0.5); opacity: 0; }
-      /* Cập nhật thành 100 độ */
       15% { transform: translate(-25px, 8px) rotate(100deg) scale(1.2); opacity: 1; }
-      /* Từ 60 độ cộng thêm 30 độ thành 90 độ */
       100% { transform: translate(-120px, 40px) rotate(90deg) scale(0.8); opacity: 0; }
     }
     .sneeze-cloud-text {
@@ -520,19 +517,13 @@ body.doraemon-mode .image-flipper {
         border: none !important; margin: 0 !important;
     }
     
-    /* Điều chỉnh lại chiều cao box chat bên trong */
     .chat-fullscreen .chat-box-height { height: calc(100dvh - 140px) !important; max-height: none !important; }
-    
-    /* Chống lướt nền Safari */
-    body.no-scroll { overflow: hidden; } /* Bỏ position: fixed và width: 100% đi */
+    body.no-scroll { overflow: hidden; } 
     /* ================= DORAEMON MODE - CLASSIC DOOR CSS ================= */
-
-    /* 2. Cánh cửa thần kỳ nguyên bản (Tối giản & Sang trọng) */
-    /* Thêm transition cho khung gốc để lúc tắt nó mờ đi từ từ */
     #main-chat-wrapper {
         transition: background-color 1.5s ease, border 1.5s ease, box-shadow 1.5s ease, border-radius 1.5s ease !important;
     }
-    /* 2. Giao diện Doraemon Mode (Nền xanh, viền xanh đậm) */
+
     body.doraemon-mode #main-chat-wrapper { 
         background-color: #E1F5FE !important; 
         border: 8px solid #03A9F4 !important; 
@@ -543,11 +534,8 @@ body.doraemon-mode .image-flipper {
         box-shadow: 0 15px 35px rgba(3, 169, 244, 0.4) !important;
     }
     
-    /* Khôi phục màu chữ trong header cho dễ đọc trên nền hồng */
     body.doraemon-mode #bot-status, body.doraemon-mode #bot-disclaimer { color: #333 !important; }
     body.doraemon-mode #power-tag { background: rgba(255,255,255,0.4) !important; color: #333 !important; }
- 
-    /* 5. Icon Doraemon chạy có màu (Được giữ lại theo ý bạn) */
     body.doraemon-mode .typing-dot { display: none !important; }
     body.doraemon-mode .typing-dot:first-child { 
         display: inline-block !important; 
@@ -609,8 +597,6 @@ body.doraemon-mode .image-flipper {
     opacity: 0; transition: opacity 0.4s ease;
 }
     #bao-boi-overlay.open { display: flex; opacity: 1; pointer-events: auto; }
-
-/* 1. KHUNG NHÌN: Bắt buộc là block, KHÔNG ĐƯỢC chứa display: flex */
 .carousel-viewport {
     width: 100vw;
     height: 420px;
@@ -618,27 +604,23 @@ body.doraemon-mode .image-flipper {
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    display: block; /* <--- Phải là block để nội dung con tràn ra ngoài */
+    display: block; 
     -ms-overflow-style: none; 
     scrollbar-width: none;
 }
 .carousel-viewport::-webkit-scrollbar { display: none; }
-
-/* 2. ĐƯỜNG RAY: Ép giãn hết cỡ theo tổng chiều dài các thẻ */
 .carousel-track {
     display: flex; 
     gap: 20px;
     height: 100%; 
     align-items: center;
-    width: max-content; /* Ép bung hết chiều dài, không bị bóp lại */
+    width: max-content; 
 }
-
-/* 3. LỀ AN TOÀN: Dùng 2 cục gạch tàng hình chèn 2 đầu thay cho padding */
 .carousel-track::before,
 .carousel-track::after {
     content: '';
     display: block;
-    flex: 0 0 calc(50vw - 130px); /* Căn chính giữa hoàn hảo */
+    flex: 0 0 calc(50vw - 130px); 
     height: 100%;
 }
 
@@ -646,7 +628,7 @@ body.doraemon-mode .image-flipper {
 .carousel-item {
     flex: 0 0 220px; 
     height: 280px; 
-    scroll-snap-align: center; /* Trọng tâm khựng lại lúc vuốt */
+    scroll-snap-align: center;
     background: #000; 
     border-radius: 30px; 
     display: flex; 
@@ -662,28 +644,22 @@ body.doraemon-mode .image-flipper {
 
     .carousel-item.active { transform: scale(1.15); filter: brightness(1.1); border: 4px solid #FFD700; z-index: 10; }
     .carousel-item:not(.active) { transform: scale(0.85); opacity: 0.6; filter: grayscale(0.8); z-index: 1; }
-
-    /* Ảnh phủ kín 100% thẻ, không có bất kỳ lớp màu nào đè lên */
     .carousel-item img { 
         position: absolute; top: 0; left: 0;
         width: 100%; height: 100%; object-fit: cover; 
         pointer-events: none !important; -webkit-user-drag: none; 
         z-index: 1;
     }
-
-    /* Chữ bám đáy, có viền bóng đen mờ tỏa ra xung quanh từng chữ */
     .carousel-item h3 { 
         position: relative; z-index: 3;
         font-size: 18px; font-weight: 900; color: #fff; text-align: center; 
         pointer-events: none; 
-        margin-bottom: 25px; /* Khoảng cách từ chữ xuống đáy thẻ */
-        
-        /* Kỹ thuật 4 lớp bóng để tạo viền mờ quanh chữ */
+        margin-bottom: 25px; 
         text-shadow: 
-            0 0 5px rgba(0, 0, 0, 1),   /* Lớp viền sát chữ cực đậm */
-            0 0 10px rgba(0, 0, 0, 0.8), /* Lớp bóng mờ tỏa ra vừa */
-            0 0 20px rgba(0, 0, 0, 0.6), /* Lớp bóng mờ tỏa ra rộng */
-            2px 2px 3px rgba(0, 0, 0, 0.9); /* Bóng đổ nhẹ xuống dưới tạo khối */
+            0 0 5px rgba(0, 0, 0, 1),   
+            0 0 10px rgba(0, 0, 0, 0.8), 
+            0 0 20px rgba(0, 0, 0, 0.6), 
+            2px 2px 3px rgba(0, 0, 0, 0.9); 
     }
     /* ================= CSS HIỆU ỨNG BẢO BỐI ================= */
     /* 1. Máy ảnh tạo mốt (Flash & Darkmode) */
@@ -733,7 +709,6 @@ body.doraemon-mode .image-flipper {
     /* 1. Cánh cửa thần kỳ */
     .pink-door { width: 320px; height: 460px; background: url('https://lh3.googleusercontent.com/u/0/d/1OEBI6TLi700cQt7Ff-Osp_u8AWzLvf6X') center/100% 100% no-repeat; background-color: transparent; border: none; border-radius: 0; position: relative; transform-origin: left; transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform: perspective(1000px) rotateY(-90deg); display: flex; flex-direction: column; padding: 50px 30px;align-items: center; 
  justify-content: center; gap: 15px; filter: drop-shadow(10px 10px 15px rgba(0,0,0,0.5));}
-    /* Ẩn cục nắm cửa vẽ bằng thẻ div cũ đi vì ảnh đã có sẵn nắm cửa */
     .pink-door > div[style*="background: gold"] { display: none !important; }
     .gadget-modal.open .pink-door { transform: perspective(1000px) rotateY(0deg); }
     .pink-door.slam { transform: perspective(1000px) rotateY(-90deg) scale(0.5); opacity: 0; }
@@ -784,7 +759,6 @@ body.doraemon-mode .image-flipper {
         top: 50%; left: 50%;
         width: 200vw; height: 200vw;
         border-radius: 50%;
-        /* Gradient hình nón tạo cảm giác hút sâu vào tâm */
         background: conic-gradient(from 0deg, #1e3a8a, #3b82f6, #8b5cf6, #ffffff, #8b5cf6, #3b82f6, #1e3a8a);
         filter: blur(15px);
         pointer-events: none;
@@ -808,9 +782,9 @@ body.doraemon-mode .image-flipper {
         position: absolute;
         top: 50%; 
         left: 50%;
-        font-size: 30px; /* Kích thước icon */
-        pointer-events: none; /* Không cản trở vuốt chuột */
-        z-index: 1; /* Nằm trên vòng xoáy, dưới thẻ bài */
+        font-size: 30px; 
+        pointer-events: none; 
+        z-index: 1; 
         animation: gadgetFlyOut var(--duration) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
     }
@@ -849,14 +823,11 @@ body.doraemon-mode .image-flipper {
     transition: grid-template-rows 0.4s ease-out, opacity 0.3s ease-out, margin-top 0.4s ease-out;
 }
 
-/* CHÌA KHÓA MƯỢT MÀ: Bắt buộc phải luôn hidden ở cả 2 trạng thái và có min-height: 0 */
 .comment-collapse > div,
 .comment-expand > div {
     overflow: hidden;
     min-height: 0;
 }
-
-/* Đường kẻ bo góc chữ L cho AI Reply */
 .reply-connector {
     position: absolute;
     top: -12px;
@@ -869,8 +840,6 @@ body.doraemon-mode .image-flipper {
     pointer-events: none;
 }
 /* ================= HIỆU ỨNG ĐÓNG THREADS HOÀN HẢO ================= */
-
-/* CHỈ ÁP DỤNG TRÊN MOBILE ĐỂ TRÁNH LỖI LAYOUT VÀ MÉO ẢNH TRÊN WEB */
 @media (max-width: 1023px) {
     body.threads-closing .area-menu {
         display: flex !important; 
@@ -878,8 +847,8 @@ body.doraemon-mode .image-flipper {
     }
 
     body.threads-closing .area-images {
-        display: grid !important; /* BẮT BUỘC LÀ GRID ĐỂ CHỐNG LỖI ẢNH TO ẢNH NHỎ */
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important; /* Ép cứng chia đôi 50/50 tuyệt đối */
+        display: grid !important; 
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         animation: fadeInReveal 0.4s ease forwards !important;
     }
 }
@@ -908,7 +877,7 @@ body.doraemon-mode .image-flipper {
 }
     /* ================= SECRET MESSAGE UI ================= */
 .direct-msg-glow:focus-within { 
-    box-shadow: 0 0 20px 5px rgba(16, 185, 129, 0.4) !important; /* Xanh ngọc Emerald */
+    box-shadow: 0 0 20px 5px rgba(16, 185, 129, 0.4) !important; 
     border-color: #10b981 !important; 
 }
 .secret-tooltip {
@@ -934,7 +903,7 @@ body.doraemon-mode .image-flipper {
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s;
 }
-/* Đuôi bong bóng giống y hệt đám mây ngủ nhưng đổi vị trí sang trái */
+
 .secret-tooltip::after {
     content: '';
     position: absolute;
@@ -945,7 +914,7 @@ body.doraemon-mode .image-flipper {
     background: var(--bot-msg-bg);
     border-radius: 50%;
     border: 1px solid var(--glass-border);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* <-- THÊM BÓNG ĐỔ Ở ĐÂY */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
 .secret-tooltip::before {
     content: '';
@@ -957,45 +926,35 @@ body.doraemon-mode .image-flipper {
     background: var(--bot-msg-bg);
     border-radius: 50%;
     border: 1px solid var(--glass-border);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* <-- THÊM BÓNG ĐỔ Ở ĐÂY */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
 }
 .secret-tooltip.show {
     opacity: 1;
     visibility: visible;
 }
 /* ================= STORY 24H UI (FIX LỖI CÂN BẰNG & ĐÈ ẢNH) ================= */
-
-/* Tạo vòng sáng tàng hình nở ra bên NGOÀI Avatar */
 #profile-avatar-ring::before {
     content: "";
     position: absolute;
-    /* Nở to ra ngoài 4px để không phạm vào diện tích ảnh */
     top: -4px; left: -4px; right: -4px; bottom: -4px; 
-    border-radius: 36px; /* Bo góc to hơn ảnh một chút để ôm vừa khít */
+    border-radius: 36px; 
     background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-    z-index: 0; /* Ép vòng sáng nằm dưới bức ảnh (z-10) */
-    opacity: 0;  /* Mặc định giấu đi */
+    z-index: 0; 
+    opacity: 0;  
     transition: opacity 0.4s ease;
     pointer-events: none;
 }
-
-/* Đổi màu xám khi đã xem */
 #profile-avatar-ring.story-ring-viewed::before {
     background: linear-gradient(45deg, #9ca3af, #d1d5db);
 }
-
-/* CHỈ HIỆN VÒNG SÁNG KHI MỞ DÒNG THỜI GIAN */
 body.threads-active #profile-avatar-ring.story-ring-active::before,
 body.threads-active #profile-avatar-ring.story-ring-viewed::before {
     opacity: 1; 
 }
 
-/* Hiệu ứng nhún nhẹ mượt mà khi bấm vào Avatar (không bắt buộc nhưng UX rất đã) */
 #profile-avatar-ring:active #main-profile-pic {
     transform: scale(0.95);
 }
-
-/* --- (Phần Progress bar giữ nguyên như cũ) --- */
 .story-progress-container {
     display: flex; gap: 4px; padding: 12px 8px;
     position: absolute; top: 0; left: 0; right: 0; z-index: 50;
@@ -1013,7 +972,7 @@ body.threads-active #profile-avatar-ring.story-ring-viewed::before {
 }
 .m1-gear-spin-glow {
     filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.8));
-    animation: gearSpin 3s linear infinite; /* 3s trùng khớp đúng tốc độ vòng ngoài */
+    animation: gearSpin 3s linear infinite; 
 }
 @keyframes gearBob {
     0% { transform: translateY(6px); }
@@ -1025,7 +984,7 @@ body.threads-active #profile-avatar-ring.story-ring-viewed::before {
 }
 .matrix-code {
     position: absolute;
-    color: rgba(34, 197, 94, 0.7); /* Chữ Matrix xanh lá */
+    color: rgba(34, 197, 94, 0.7); 
     font-family: monospace; font-weight: bold; font-size: 14px;
     user-select: none; animation: matrixFall linear forwards;
     text-shadow: 0 0 5px rgba(34, 197, 94, 0.8);
@@ -1036,22 +995,22 @@ body.threads-active #profile-avatar-ring.story-ring-viewed::before {
     80% { opacity: 0.8; }
     100% { transform: translateY(800px); opacity: 0; } 
 }
-/* --- HIỆU ỨNG SÓNG RADAR (BẢN TINH TẾ) --- */
+/* --- HIỆU ỨNG SÓNG RADAR --- */
 .m1-radar {
     position: absolute;
     inset: 0px; 
-    border: 1px solid rgba(34, 197, 94, 0.2); /* Viền mỏng 1px và siêu mờ (20%) */
+    border: 1px solid rgba(34, 197, 94, 0.2); 
     border-radius: 50%;
     opacity: 0;
-    animation: radarPing 5s cubic-bezier(0.25, 1, 0.5, 1) infinite; /* Chậm lại, nhịp 5 giây */
+    animation: radarPing 5s cubic-bezier(0.25, 1, 0.5, 1) infinite; 
 }
 .m1-radar-2 {
-    animation-delay: 2.5s; /* Sóng 2 nối đuôi nhịp nhàng hơn */
+    animation-delay: 2.5s;
 }
 @keyframes radarPing {
     0% { transform: scale(0.8); opacity: 0; }
-    20% { opacity: 0.5; } /* Tối đa chỉ sáng 50% rồi mờ dần ngay */
-    100% { transform: scale(2.2); opacity: 0; } /* Chỉ tỏa ra vừa phải, không bung quá to */
+    20% { opacity: 0.5; } 
+    100% { transform: scale(2.2); opacity: 0; } 
 }
 /* --- HIỆU ỨNG MÀN HÌNH ĐANG THI CÔNG (GATEKEEPER) --- */
 .construction-icon {
@@ -1493,7 +1452,6 @@ body.threads-active #profile-avatar-ring.story-ring-viewed::before {
     </div>
 </div>
     <script>
-      // ========================================================
     
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycby733s7oboPlU-UFYo2rLQ08OaIGawK3Uxh0Fz0_GO4GalLlTFDp-9z5GqWnlDb-YKRpw/exec"; 
 
@@ -1526,7 +1484,6 @@ body.threads-active #profile-avatar-ring.story-ring-viewed::before {
         });
         return runner;
     }
-    // ========================================================
     function escapeHTML(str) {
     if (!str) return '';
     return str.replace(/[&<>'"]/g, function(tag) {
@@ -1554,7 +1511,7 @@ body.threads-active #profile-avatar-ring.story-ring-viewed::before {
     function toggleM1Maintenance(isActive) {
         const maintState = document.getElementById('maint-state-container');
         const rainContainer = document.getElementById('matrix-rain-container');
-        const tooltip = document.getElementById('secret-tooltip'); // Lấy cái tooltip
+        const tooltip = document.getElementById('secret-tooltip'); 
         
         if (isActive) {
             chatBox.innerHTML = '';
@@ -1571,10 +1528,7 @@ body.threads-active #profile-avatar-ring.story-ring-viewed::before {
             statusDot.className = 'w-3 h-3 bg-red-500 rounded-full pulse-anim shadow-[0_0_10px_#ef4444] shrink-0';
             document.getElementById('bot-status').innerText = translations[currentLang].maintStatus;
             
-            // TẮT ÉP TOOLTIP @
             if (tooltip) tooltip.style.display = 'none'; 
-            
-            // BẬT MƯA MATRIX VÀ BẬT LUÔN TERMINAL LOG
             if (!matrixTimer) matrixTimer = setInterval(spawnMatrixCode, 250);
             if (!terminalTimer) terminalTimer = setInterval(spawnTerminalLog, 800);
 
@@ -1582,19 +1536,15 @@ body.threads-active #profile-avatar-ring.story-ring-viewed::before {
             maintState.classList.add('hidden');
             maintState.classList.remove('flex');
             
-            // DỌN DẸP MATRIX
             clearInterval(matrixTimer);
             matrixTimer = null;
             if(rainContainer) rainContainer.innerHTML = '';
             
-            // DỌN DẸP TERMINAL (Dừng chạy chữ và xóa mảng)
             clearInterval(terminalTimer);
             terminalTimer = null;
             terminalLogLines.length = 0; 
             const terminalEl = document.getElementById('maint-terminal');
             if (terminalEl) terminalEl.innerHTML = '';
-            
-            // BẬT LẠI TOOLTIP KHI HẾT BẢO TRÌ
             if (tooltip) tooltip.style.display = '';
         }
     }
@@ -1631,21 +1581,16 @@ body.threads-active #profile-avatar-ring.story-ring-viewed::before {
         
         const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
         const text = phrases[Math.floor(Math.random() * phrases.length)];
-        
-        // Đổi màu cho chữ [WARN] và [OK] để nhìn xịn hơn
         let colorClass = "text-green-500/70";
         if (prefix === "WARN") colorClass = "text-yellow-500/80";
         if (prefix === "OK") colorClass = "text-cyan-500/80";
 
         const line = `<span class="${colorClass}">[${prefix}] ${text}</span>`;
         terminalLogLines.push(line);
-        
-        // Chỉ giữ lại 5 dòng mới nhất để không bị tràn khung
         if (terminalLogLines.length > 5) terminalLogLines.shift(); 
         
         terminal.innerHTML = terminalLogLines.join('<br>');
     }
-    // --- KẾT THÚC BẢO TRÌ M1 PRO LOGIC ---
 
     let currentPersonalityName = "";
     const uiState = {
@@ -1653,7 +1598,7 @@ body.threads-active #profile-avatar-ring.story-ring-viewed::before {
      isSneezing: false,
      isDartCooldown: false
     }; 
-    // --- LOGIC NHẬN DIỆN NGÔN NGỮ MÁY CHUẨN ---
+
 let currentLang = 'en'; 
 try {
     let savedLang = localStorage.getItem('peih_lang');
@@ -1668,9 +1613,8 @@ try {
     const sysLang = navigator.language || navigator.userLanguage;
     currentLang = sysLang.startsWith('vi') ? 'vi' : (sysLang.startsWith('ja') ? 'ja' : 'en');
 }
-// ------------------------------------------
+
     let activeEggTimeouts = [];
-// --- 1. KHỞI TẠO TÀI KHOẢN VÀ BỘ NHỚ TRƯỚC ---
     let currentSessionId = 'Guest_' + Math.random().toString(36).substr(2, 6).toUpperCase();
     let chatContextHistory = [];
     let eggMessageIds = []; 
@@ -1690,8 +1634,6 @@ try {
     } catch (error) {
         console.warn("Trình duyệt nhúng (IG/FB) đã chặn LocalStorage. Chạy chế độ ẩn danh.");
     }
-
-    // --- 2. KHỞI TẠO FIREBASE ---
     const firebaseConfig = { databaseURL: "https://peih-hotline-default-rtdb.firebaseio.com" };
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
@@ -1700,34 +1642,28 @@ try {
     let chatRef = null;
     let cmdRef = null;
 
-    let isAIBlockedByAdmin = false; // Phải đặt biến này ở ngoài cùng để flushMessageBuffer thấy được
+    let isAIBlockedByAdmin = false; 
 
     function initFirebaseListeners() {
         const statusRef = database.ref('status/' + currentSessionId);
-        
-        // Dọn rác khi ngắt kết nối
         statusRef.onDisconnect().remove();
         database.ref('chats/' + currentSessionId).onDisconnect().remove();
 
         statusRef.child('real_name').on('value', (snap) => {
-            if (window.isSystemHalted) return; // NẾU SẬP MẠNG THÌ DỪNG LẠI, KHÔNG ĐỔI CHỮ
+            if (window.isSystemHalted) return; 
 
             const realName = snap.val();
             const inputEl = document.getElementById('user-input');
             
-            // Lưu tên vào biến toàn cục để dùng lại khi khách bấm đổi ngôn ngữ
             window.currentRealName = realName; 
 
             if (realName && realName.trim() !== "" && !isAppSleeping && !isFakeSleeping && !isHotlineMode) {
-                // Lấy câu chào theo ngôn ngữ hiện tại và thay {name} bằng tên thật
                 inputEl.placeholder = translations[currentLang].placeholderWithName.replace('{name}', realName);
             } else if (!isAppSleeping && !isFakeSleeping && !isHotlineMode) {
                 inputEl.placeholder = translations[currentLang].placeholder; 
             }
         });
-        // --------------------------------------------------
 
-        
         statusRef.update({ 
             is_online: true, 
             last_active: Date.now(),
@@ -1754,14 +1690,14 @@ try {
                 }
                 return; 
             }
-            // -------------------------------------------------------
+
             if (data && data.sender === 'admin') {
                 if (data.text === '/cut_wire') { 
                     if (isHotlineMode) toggleHotlineMode(false); 
                     return; 
                 }
                 if (data.text === '/logout') {
-                    triggerLogoutEgg(); // Chạy lệnh logout (đã sửa để không xóa ID)
+                    triggerLogoutEgg(); 
                     return;
                 }
                 appendRealAdminMsgToUI(data.text);
@@ -1770,8 +1706,6 @@ try {
                 localStorage.setItem('peih_context_' + currentSessionId, JSON.stringify(chatContextHistory));   
             }
         });
-
-        // 4. Nghe lệnh tắt toàn mạng
         let initTime = Date.now();
         cmdRef = database.ref('system/global_command');
         cmdRef.on('value', (snapshot) => {
@@ -1782,11 +1716,8 @@ try {
         });
     }
 
-    // Kích hoạt tai nghe
     initFirebaseListeners();
-    // --- KẾT THÚC: TAI NGHE CHẠY NGẦM ---
 
-    // --- 4. BẬT TẮT ỐNG BƠ ---
     function toggleHotlineMode(active) {
         isHotlineMode = active; 
         const wrapper = document.getElementById('main-chat-wrapper');
@@ -1807,8 +1738,6 @@ try {
             }
             appendSystemMsg(translations[currentLang].tinCanDivider); 
             inputField.placeholder = translations[currentLang].tinCanPlaceholder;
-            
-            // Báo lên Admin
             statusRef.set({ hotline_active: true, last_seen: Date.now() });
         } else {
             wrapper.classList.remove('chat-on-call'); 
@@ -1821,13 +1750,10 @@ try {
             
             appendSystemMsg(translations[currentLang].tinCanEnd); 
             inputField.placeholder = translations[currentLang].placeholder;
-            
-            // Báo Admin đã ngắt
             statusRef.update({ hotline_active: false });
         }
     }
 
-    // --- 5. CÁC BIẾN HOẠT ĐỘNG CỦA UI ---
     let autoChatActive = false; 
     let chatSequenceId = 0; 
     let isAppSleeping = false; 
@@ -1843,15 +1769,14 @@ try {
     let dartClicks = 0;
     let userMessageBuffer = []; 
     let typingTimer = null; 
-    let userMsgCountForSummary = 0; // Đếm số tin để gọi Tóm tắt ngầm
+    let userMsgCountForSummary = 0; 
     let failsafeTimer = null;
     let inputIdleTimer = null; 
     const BUFFER_LIMIT = 8; 
     
     let currentBubblesContainer = null; 
-    let currentAdminBubblesContainer = null; // Biến gom nhóm tin nhắn Admin
+    let currentAdminBubblesContainer = null; 
 
-// Hàm chuyên dụng để render tin nhắn của Bạn (Real Peih) mượt mà
 function appendRealAdminMsgToUI(text) {
     if (!currentAdminBubblesContainer) {
         const groupWrapper = document.createElement('div');
@@ -1871,7 +1796,6 @@ function appendRealAdminMsgToUI(text) {
     msgDiv.className = 'msg-bubble real-person-bubble';
     msgDiv.innerHTML = text.replace(/\n/g, '<br>');
     
-    // Logic tự động bo góc khi dính liền nhau
     const bubbles = currentAdminBubblesContainer.children;
     if (bubbles.length === 0) {
         msgDiv.style.borderRadius = "24px 24px 24px 6px";
@@ -1921,10 +1845,8 @@ function appendRealAdminMsgToUI(text) {
       ];
 
     let quoteIndex = 0;
-    let doraQuoteIndex = 0; // Thêm biến đếm riêng cho Doraemon
+    let doraQuoteIndex = 0; 
     const statusNote = document.getElementById('status-note');
-
-    // Mảng chứa các câu nói bất hủ của Doraemon (3 ngôn ngữ)
     const doraQuotes = [
       // GIAN
       { vi: '"Vật của cậu là vật của tớ, vật của tớ vẫn là của tớ!" - Gian', en: '"What\'s yours is mine, and what\'s mine is mine!" - Gian', ja: '"おまえの物は俺の物、俺の物も俺の物！" - ジャイアン' },
@@ -1944,16 +1866,14 @@ function appendRealAdminMsgToUI(text) {
       statusNote.style.opacity = 0;
       setTimeout(() => {
         if (document.body.classList.contains('doraemon-mode')) {
-            // Khi ở chế độ Doraemon: Dùng danh sách và biến đếm của Doraemon
             statusNote.innerText = doraQuotes[doraQuoteIndex][currentLang];
             doraQuoteIndex = (doraQuoteIndex + 1) % doraQuotes.length;
         } else {
-            // Khi ở chế độ gốc (Peih): Dùng danh sách và biến đếm của Peih
             statusNote.innerText = quotes[quoteIndex][currentLang];
             quoteIndex = (quoteIndex + 1) % quotes.length;
         }
         statusNote.style.opacity = 1;
-      }, 800); // Đợi 0.8s cho chữ mờ đi rồi mới đổi câu mới
+      }, 800); 
     }
     const translations = {
       vi: { 
@@ -2116,14 +2036,12 @@ function appendRealAdminMsgToUI(text) {
     let activePrivacyMenus = []; 
     let activePrivacyContents = {}; 
     let introPrivacyId = null;
-    let isPrivacyLocked = false; // Biến khoá 5s
+    let isPrivacyLocked = false; 
 
-    // Hàm xoá hoàn toàn bong bóng khỏi khung chat (không để lại dấu vết)
     function removeBubbleCompletely(id) {
         let el = document.getElementById(id);
         if (el && el.parentElement) el.parentElement.remove();
     }
-    // Hàm hiện "..." động vô hạn chờ Google Sheet 
     function appendPrivacyTyping(id) {
         const html = `
         <div class="flex items-end gap-1.5 w-full mb-1 mt-4">
@@ -2136,36 +2054,26 @@ function appendRealAdminMsgToUI(text) {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Khi người dùng bấm vào dòng Footer
     async function triggerPrivacyMenu() {
         if(isAppSleeping || isFakeSleeping) return;
-
-        // Nếu menu đã mở rồi thì KHÔNG ĐÓNG, chỉ cuộn xuống cuối cùng để user thấy
         if (activePrivacyMenus.length > 0) {
             chatBox.scrollTop = chatBox.scrollHeight;
             return;
         }
 
         if(isPrivacyLocked) return;
-        
-        // Khoá nút bấm 5s để tránh spam gọi Google Sheet liên tục
         isPrivacyLocked = true;
         setTimeout(() => isPrivacyLocked = false, 5000); 
 
         await showTypingIndicator(800, false);
         const groupId = 'priv-' + Date.now();
-        
-        // 1. Hiện bong bóng Lời chào - Chỉ tạo 1 lần
         if (!introPrivacyId) {
             introPrivacyId = groupId + '-intro';
             appendPrivacyBotMsg(translations[currentLang].privacyIntro, introPrivacyId, true);
         }
         
-        // 2. Hiện 5 bong bóng menu
         showPrivacyOptions(groupId);
     }
-
-    // Render 5 bong bóng bấm được (Chữ đỏ dịu hơn)
     function showPrivacyOptions(groupId) {
         const opts = [
             { id: groupId + '-btn1', text: "🛡️ " + translations[currentLang].btnPrivacy, action: "fetchAndShowPolicy('privacy')" },
@@ -2202,81 +2110,63 @@ function appendRealAdminMsgToUI(text) {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Gọi lên GG Sheet
     function fetchAndShowPolicy(type) {
-        // Xoá hoàn toàn 5 bong bóng menu
         activePrivacyMenus.forEach(removeBubbleCompletely);
         activePrivacyMenus = [];
-        
-        // Xoá hoàn toàn nội dung cũ nếu bấm tab khác
         Object.values(activePrivacyContents).forEach(removeBubbleCompletely);
         activePrivacyContents = {};
 
-        // Hiện "..." động chờ mạng Load Google Sheet
         const loadingId = 'priv-load-' + Date.now();
         appendPrivacyTyping(loadingId);
 
-        // Gọi Google Script
         google.script.run.withSuccessHandler(function(content) {
-            // Xoá dấu "..." động đi
             removeBubbleCompletely(loadingId);
             
-            // Hiện nội dung text từ GG Sheet
             const contentId = 'priv-content-' + Date.now();
             activePrivacyContents[type] = contentId; 
             appendPrivacyBotMsg(content.replace(/\n/g, '<br>'), contentId, true);
             
-            // Render lại 5 nút bấm ở tận cùng
             const groupId = 'priv-' + Date.now();
             showPrivacyOptions(groupId);
         }).getPrivacyContent(type, currentLang);
     }
 
-    // Khi bấm nút "Kết thúc"
     function closePrivacyMenu() {
-        // Xoá hoàn toàn 5 bong bóng menu
         activePrivacyMenus.forEach(removeBubbleCompletely);
         activePrivacyMenus = [];
-        
-        // Xoá hoàn toàn bong bóng nội dung
         Object.values(activePrivacyContents).forEach(removeBubbleCompletely);
         activePrivacyContents = {};
-        
-        // Chỉ hiện "Đã thu hồi" ở duy nhất tin nhắn gốc ban đầu
         if(introPrivacyId) { 
             recallSpecificBubble(introPrivacyId); 
             introPrivacyId = null; 
         }
     }
-    // Hàm thu hồi bong bóng được chỉ định (Fix lỗi crash JS)
+
     function recallSpecificBubble(id) {
         let el = document.getElementById(id);
         if (el) {
             el.innerText = translations[currentLang].eggRecalled;
             el.className = 'msg-recalled';
             el.style.opacity = '1';
-            
-            // Tìm và xoá avatar bên trái bong bóng
             let avatar = el.parentElement.querySelector('img, .shrink-0');
             if (avatar) avatar.remove();
         }
     }
     /* ================= EASTER EGGS LOGIC ================= */
 
-// 1. Hàm Guard: Kiểm tra xem Bot có đang bận chạy animation/chế độ khác không
 function isBotBusy() {
     const wrapper = document.getElementById('main-chat-wrapper');
     return isAppSleeping || 
            isFakeSleeping || 
            autoChatActive || 
-           isHotlineMode || // Thêm: Chặn không cho nghịch khi đang gọi Ống bơ
-           uiState.isSneezing || // Thêm: Chặn khi đang animation hắt xì
+           isHotlineMode || 
+           uiState.isSneezing || 
            (wrapper && (wrapper.classList.contains('zelda-mode') || 
                         wrapper.classList.contains('starbucks-mode') || 
-                        wrapper.classList.contains('music-mode'))) || // Thêm music-mode
+                        wrapper.classList.contains('music-mode'))) || 
            (document.getElementById('logout-overlay') && document.getElementById('logout-overlay').classList.contains('active'));
 }
-// 2. Hàm Reset: Dọn dẹp chiến trường trước khi kích hoạt Easter Egg mới
+
 function resetAllVisuals() {
     clearVisualModes(false);
     activeEggTimeouts.forEach(clearTimeout);
@@ -2284,7 +2174,7 @@ function resetAllVisuals() {
     if (uiState.isBlurry) {
         document.body.classList.remove('blur-mode');
         Array.from(chatBox.children).forEach(child => child.classList.remove('blurry-msg'));
-        uiState.isBlurry = false; // Đưa trạng thái về bình thường
+        uiState.isBlurry = false; 
     }
     uiState.isDartCooldown = false;
     const dartIcon = document.getElementById('dart-icon');
@@ -2294,7 +2184,7 @@ function resetAllVisuals() {
     inputField.disabled = false;
     sendBtn.disabled = false;
 }
-    /* ================= POCKET CAROUSEL DATA (APPLE STYLE) ================= */
+    /* ================= POCKET CAROUSEL DATA ================= */
     // 1. DANH SÁCH 12 BẢO BỐI
     const baoBoiList = [
         { id: 'trans_bread', img: 'https://lh3.googleusercontent.com/u/0/d/1MB2wSrRoswhKNk9aP0yhWalz_Vv6GC-S' },
@@ -2309,7 +2199,7 @@ function resetAllVisuals() {
         { id: 'tin_can_phone', img: 'https://lh3.googleusercontent.com/u/0/d/1zge9caKP7io2geRJg9o3UzOk8gcZEMUa' },
         { id: 'treasure_map', img: 'https://lh3.googleusercontent.com/u/0/d/1rohiU8pr0HDi2Ijg3xDpBlhQtC46a3ji' }
     ];
-/* ================= POCKET CAROUSEL - CƠ CHẾ CHẠM (TAP-TO-SELECT) ================= */
+/* ================= POCKET CAROUSEL - CƠ CHẾ CHẠM ================= */
     let isPocketOpen = false;
     let currentX = 0;
     const CARD_WIDTH = 240; // Độ rộng thẻ (220) + Gap (20)
@@ -2378,7 +2268,6 @@ function resetAllVisuals() {
 
     function handleOverlayClick(e) {
         const clickedId = e.target.id;
-        // Nếu click vào nền đen, xoáy nước, hoặc khoảng trống của carousel thì đóng túi
         if (clickedId === 'bao-boi-overlay' || clickedId === 'pocket-vortex' || clickedId === 'pocket-content' || clickedId === 'carousel-viewport') {
             if (isPocketOpen) {
                 togglePocket();
@@ -2399,7 +2288,7 @@ function resetAllVisuals() {
         card.onclick = (e) => {
             e.stopPropagation();
             if (card.classList.contains('active')) {
-                selectBaoBoi(item.id); // Bỏ qua ktra thẻ img, bấm là ăn luôn
+                selectBaoBoi(item.id); 
             } else {
                 const viewport = document.getElementById('carousel-viewport');
                 viewport.scrollTo({
@@ -2411,7 +2300,6 @@ function resetAllVisuals() {
         list.appendChild(card);
     });
 
-    // Lắng nghe sự kiện scroll để tính toán thẻ đang ở giữa
     const viewport = document.getElementById('carousel-viewport');
     viewport.addEventListener('scroll', updateActiveCard);
     setTimeout(updateActiveCard, 50);
@@ -2421,7 +2309,6 @@ function updateActiveCard() {
     const viewport = document.getElementById('carousel-viewport');
     if (!viewport) return;
     
-    // Tìm tọa độ tâm điểm của màn hình điện thoại
     const viewportCenter = window.innerWidth / 2;
     const items = document.querySelectorAll('.carousel-item');
     
@@ -2429,7 +2316,6 @@ function updateActiveCard() {
     let activeIndex = 0;
 
     items.forEach((item, i) => {
-        // Lấy vị trí thực tế của thẻ so với mép trái màn hình
         const rect = item.getBoundingClientRect();
         const itemCenter = rect.left + rect.width / 2;
         const distance = Math.abs(viewportCenter - itemCenter);
@@ -2440,17 +2326,16 @@ function updateActiveCard() {
         }
     });
 
-    // Thêm viền vàng cho thẻ nào đang đứng gần tâm màn hình nhất
     items.forEach((item, i) => {
         if (i === activeIndex) item.classList.add('active');
         else item.classList.remove('active');
     });
 }
-    // Hàm tạo hạt lấp lánh cho Nút Vàng
+
     function createSparkles() {
         const btn = document.getElementById('nut-vang-than-ky');
         if(!btn) return;
-        btn.innerHTML = ''; // Xóa hạt cũ
+        btn.innerHTML = ''; 
         for(let i=0; i<6; i++) {
             let s = document.createElement('div');
             s.className = 'sparkle';
@@ -2464,7 +2349,6 @@ function updateActiveCard() {
         }
     }
 
-    // Khung chuẩn bị để gọi tính năng của từng bảo bối (Sẽ làm ở Phần 3)
     function selectBaoBoi(id) {
         togglePocket(); // Đã đổi từ closeBaoBoiCarousel sang togglePocket
         const inputEl = document.getElementById('user-input');
@@ -2485,25 +2369,23 @@ function updateActiveCard() {
                 break;
 
             case 'dressup_camera':
-                // 📷 Máy ảnh tạo mốt: Chớp flash và đổi Dark mode
                 const flash = document.getElementById('camera-flash');
                 flash.classList.add('flash');
                 
-                // Tiếng tách của máy ảnh (Tùy chọn)
                 const shutter = new Audio('https://files.catbox.moe/u6c54o.mp3');
                 shutter.play().catch(e=>{});
 
                 setTimeout(() => {
                     document.body.classList.toggle('dressup-dark');
                     flash.classList.remove('flash');
-                }, 400); // Đổi màu ngay lúc flash sáng nhất
+                }, 400); 
                 break;
 
             case 'time_kerchief':
-                // 🧣 Khăn trùm thời gian: Xóa sạch chat với hiệu ứng vải phủ
+
                 if(autoChatActive || isAppSleeping || isFakeSleeping) return;
                 const kerchief = document.getElementById('time-kerchief-overlay');
-                kerchief.classList.add('drop'); // Khăn rơi xuống
+                kerchief.classList.add('drop'); 
                 
                 setTimeout(() => {
                 
@@ -2511,21 +2393,19 @@ function updateActiveCard() {
                     eggMessageIds = []; 
                     chatContextHistory = []; 
                     localStorage.removeItem('peih_context_' + currentSessionId);
-                    
-                    // Khăn giật ngược lên trên
                     kerchief.classList.remove('drop');
                     kerchief.classList.add('pull-up');
                     
                     setTimeout(() => {
-                        kerchief.classList.remove('pull-up'); // Reset khăn
-                        startAutoChat(); // Khởi động lại lời chào
+                        kerchief.classList.remove('pull-up'); 
+                        startAutoChat(); 
                     }, 1000);
                 }, 800);
                 break;
 
             case 'truth_pepper':
-    if(isBotBusy() || uiState.isSneezing) return; // Thêm uiState.isSneezing
-    uiState.isSneezing = true; // Khóa state lại
+    if(isBotBusy() || uiState.isSneezing) return; 
+    uiState.isSneezing = true;
     
     let badHabit = globalUIConfig ? globalUIConfig.truthPepper : null;
     if(!badHabit) badHabit = translations[currentLang].truthPepperDefault;
@@ -2533,10 +2413,9 @@ function updateActiveCard() {
     const photoDiv = document.getElementById('cold-day-photo');
     photoDiv.classList.add('sneeze-shake');
     
-    // Mở khóa sau khi rung xong
     setTimeout(() => {
         photoDiv.classList.remove('sneeze-shake');
-        uiState.isSneezing = false; // Trả lại state
+        uiState.isSneezing = false; 
     }, 400);
 
     showTypingIndicator(1000, false).then(() => {
@@ -2545,20 +2424,16 @@ function updateActiveCard() {
     break;
 
             case 'treasure_map':
-                // 🗺️ Bản đồ kho báu
                 document.getElementById('treasure-map-modal').classList.add('open');
                 break;
             case 'anywhere_door':
-                // 🚪 Cánh cửa thần kỳ
                 document.getElementById('anywhere-door-modal').classList.add('open');
                 break;
 
             case 'dream_tv':
-                // 📺 Tivi mộng mơ
                 const tvModal = document.getElementById('dream-tv-modal');
                 const iframe = document.getElementById('tv-iframe');
-                
-                // Thay link Google Drive đã sửa đuôi thành /preview vào đây
+        
                 iframe.src = "https://drive.google.com/file/d/17HLayIYyinH-eunRqnxhJTCOrgRzZzLU/preview"; 
                 
                 tvModal.classList.add('open');
@@ -2566,7 +2441,6 @@ function updateActiveCard() {
                 break;
 
             case 'trans_bread':
-                // 🍞 Bánh mì chuyển ngữ
                 document.getElementById('bread-modal').classList.add('open');
                 document.getElementById('bread-content').classList.remove('bread-bite');
                 break;
@@ -2575,8 +2449,6 @@ function updateActiveCard() {
                 if(isAppSleeping || isFakeSleeping) return;
                 const tray = document.getElementById('pill-tray-content');
                 document.getElementById('pill-modal').classList.add('open');
-
-                // LẤY DỮ LIỆU TỪ BỘ NHỚ TẠM (TỐC ĐỘ BÀN THỜ, KHÔNG CÓ ĐỘ TRỄ)
                 const pillNames = globalUIConfig ? globalUIConfig.pillNames : []; 
                 
                 tray.innerHTML = `<h3 style="width: 100%; text-align: center; margin-bottom: 10px;">${translations[currentLang].pillTitle}</h3>`;
@@ -2603,7 +2475,6 @@ function updateActiveCard() {
                 break;
 
             case 'booking_diary':
-                // 🗓️ Sổ Đặt Lịch
                 document.getElementById('booking-modal').classList.add('open');
                 document.getElementById('leather-book-content').classList.remove('book-fly');
                 document.getElementById('leather-book-content').classList.remove('signing');
@@ -2612,30 +2483,27 @@ function updateActiveCard() {
             case 'tin_can_phone': toggleHotlineMode(true); break;
 
             default:
-                // Các bảo bối khác chưa lập trình
                 inputEl.value = `Đang kích hoạt bảo bối: ${id}...`;
                 setTimeout(() => inputEl.value = '', 2000);
                 break;
         }
     }
-
-    // Đóng bản đồ và hiệu ứng bốc cháy
     function closeTreasureMap() {
         const modal = document.getElementById('treasure-map-modal');
         const paper = document.getElementById('map-paper-content');
         
-        paper.classList.add('burn-anim'); // Kích hoạt cháy
+        paper.classList.add('burn-anim'); 
         setTimeout(() => {
             modal.classList.remove('open');
-            paper.classList.remove('burn-anim'); // Reset để lần sau mở lại
+            paper.classList.remove('burn-anim'); 
         }, 1200);
     }
-    // Đóng Cánh Cửa Thần Kỳ
+
     function closeDoor(e) {
         if(e.target.id === 'anywhere-door-modal') {
             const door = document.getElementById('pink-door-content');
             door.classList.add('slam');
-            const ramm = new Audio('https://files.catbox.moe/a6w7re.mp3'); // Tiếng sập cửa
+            const ramm = new Audio('https://files.catbox.moe/a6w7re.mp3'); 
             ramm.play().catch(er=>{});
             setTimeout(() => {
                 document.getElementById('anywhere-door-modal').classList.remove('open');
@@ -2644,38 +2512,34 @@ function updateActiveCard() {
         }
     }
 
-    // Tắt Tivi mộng mơ
     function turnOffTV() {
         const tv = document.getElementById('retro-tv-content');
-        tv.classList.add('tv-off-anim'); // Hiệu ứng CRT
+        tv.classList.add('tv-off-anim'); 
         
         setTimeout(() => {
             document.getElementById('dream-tv-modal').classList.remove('open');
-            document.getElementById('tv-iframe').src = ""; // Cắt video để tránh phát tiếng nền
+            document.getElementById('tv-iframe').src = ""; 
         }, 500);
     }
 
-    // Ăn Bánh Mì Chuyển Ngữ
     function eatBread(lang) {
         const bread = document.getElementById('bread-content');
-        bread.classList.add('bread-bite'); // Hiệu ứng bị cắn
+        bread.classList.add('bread-bite'); 
         
-        const biteSound = new Audio('https://files.catbox.moe/g24hvt.mp3'); // Tiếng cắn
+        const biteSound = new Audio('https://files.catbox.moe/g24hvt.mp3'); 
         biteSound.play().catch(e=>{});
 
         setTimeout(() => {
             document.getElementById('bread-modal').classList.remove('open');
-            changeLang(lang); // Đổi ngôn ngữ toàn hệ thống
+            changeLang(lang); 
         }, 800);
     }
 
-    // Uống Thuốc Tính Cách (Đã bảo mật)
     function swallowPill(btn, pillName) {
         btn.classList.add('swallow-anim'); 
         
         setTimeout(async () => {
             document.getElementById('pill-modal').classList.remove('open');
-            // Nếu uống thuốc giải, đưa về rỗng. Nếu uống thuốc tính cách, lưu TÊN thuốc
             currentPersonalityName = pillName === "Bình thường" ? "" : pillName; 
             
             await showTypingIndicator(1000, false);
@@ -2687,7 +2551,6 @@ function updateActiveCard() {
         }, 600);
     }
 
-    // Bấm ra ngoài để đóng khay thuốc
     function closePills(e) {
         if(e.target.id === 'pill-modal') document.getElementById('pill-modal').classList.remove('open');
     }
@@ -2726,61 +2589,43 @@ function updateActiveCard() {
 }
     function triggerSneezeEgg() {
         if (isBotBusy() || uiState.isSneezing) return;
-        uiState.isSneezing = true; // Khóa không cho bấm liên tiếp
+        uiState.isSneezing = true; 
         
         const photoDiv = document.getElementById('cold-day-photo');
         const imgEl = photoDiv.querySelector('img');
         
-        // 1. Hiệu ứng "hít vào" (phóng to nhẹ trước khi hắt xì)
         imgEl.style.transition = "transform 0.6s ease";
         imgEl.style.transform = "scale(1.08)";
 
-        // Delay một xíu rồi mới hắt xì
         setTimeout(() => {
-            // Rung ảnh do lực hắt xì
             imgEl.style.transition = "none";
             photoDiv.classList.add('sneeze-shake');
-            
-            // Bắn hạt nước lần 1
             createDroplet(photoDiv);
-            
-            // Bắn hạt nước lần 2 sau 250ms
             setTimeout(() => {
                 createDroplet(photoDiv);
-                
-                // Mảng chữ 3 ngôn ngữ
                 const sneezeTexts = ["Hắt xì! 🤧", "ハクション!", "Achoo!"];
-                
-                // Tạo 2 đám mây chữ bay lên từ đỉnh đầu
                 for(let i = 0; i < 2; i++) {
                     const cloud = document.createElement('div');
                     cloud.className = 'sneeze-cloud-text';
-                    
-                    // Random ngôn ngữ
                     cloud.innerText = sneezeTexts[Math.floor(Math.random() * sneezeTexts.length)];
-                    
-                    // Vị trí xuất phát ở trên đầu (canh chỉnh theo ảnh của bạn)
                     cloud.style.top = (20 + Math.random() * 5) + '%';
                     cloud.style.left = (40 + Math.random() * 20) + '%';
-                    
-                    // Đám mây thứ 2 sẽ bay chậm hơn đám mây 1 một nhịp (0.2s)
                     cloud.style.animation = `cloud-fly 1.2s forwards ${i * 0.2}s`;
                     photoDiv.appendChild(cloud);
                     
-                    setTimeout(() => cloud.remove(), 1500); // Dọn dẹp DOM
+                    setTimeout(() => cloud.remove(), 1500); 
                 }
                 
-                // Kết thúc diễn hoạt, mở khóa lại
                 setTimeout(() => {
                     photoDiv.classList.remove('sneeze-shake');
                     imgEl.style.transition = "transform 0.7s ease";
                     imgEl.style.transform = "scale(1)";
-                    uiState.isSneezing = false; // Mở khóa
+                    uiState.isSneezing = false; 
                 }, 1000);
 
-            }, 250); // Khoảng cách giữa 2 lần hắt xì
+            }, 250); 
 
-        }, 600); // Mất 600ms hít vào
+        }, 600); 
     }
 
     function createDroplet(container) {
@@ -2788,16 +2633,14 @@ function updateActiveCard() {
         const drop = document.createElement('div');
         drop.className = 'droplet';
         drop.innerText = '💦';
-        // ĐIỀU CHỈNH TỌA ĐỘ MỚI CHO SÁT MIỆNG:
-        drop.style.top = '33%';  // Lên cao hơn nữa (số càng nhỏ càng lên cao)
-        drop.style.left = '54%'; // Dịch qua trái(nhỏ hơn) thêm một chút
+        drop.style.top = '33%';  
+        drop.style.left = '54%'; 
         
         drop.style.animation = 'sneeze-drop 0.6s forwards';
         container.appendChild(drop);
         setTimeout(() => drop.remove(), 600);
     }
     
-    // ĐÃ FIX LỖI 1: Gom thu hồi nhiều bong bóng lại làm 1
     function recallLastEgg(force = false, targetOnly = 'normal') {
         const eggsToRecall = eggMessageIds.filter(id => force || (id.includes('music-group') ? (targetOnly === 'music' && !isMusicPlaying) : targetOnly === 'normal'));
         if (!eggsToRecall.length) return; let isFirstMerged = false;
@@ -2805,33 +2648,29 @@ function updateActiveCard() {
         eggMessageIds = eggMessageIds.filter(id => !eggsToRecall.includes(id));
     }
 
-    let blurTimer = null; // Khai báo biến này ở trên cùng, chung chỗ với các biến toàn cục khác
+    let blurTimer = null; 
 
 async function triggerBlurEgg(isFromAI = false) {
     if(isBotBusy() || !document.getElementById('welcome-screen').classList.contains('hidden')) return;
     uiState.isBlurry = !uiState.isBlurry;
     
-    clearTimeout(blurTimer); // Xóa hẹn giờ cũ để không bị đụng nhau
+    clearTimeout(blurTimer); 
 
     if(uiState.isBlurry) {
         document.body.classList.add('blur-mode');
-        // Làm mờ toàn bộ tin nhắn ĐANG CÓ SẴN
         Array.from(chatBox.children).forEach(child => child.classList.add('blurry-msg'));
         
         if (!isFromAI) {
-            // KHÁCH TỰ VỌC: In ra câu nói cài sẵn
             await showTypingIndicator(1500, false);
             appendBotMsg(translations[currentLang].eggBlur, 0, 1, true);
         } else {
-            // AI TỰ BẬT: Cài đồng hồ 15s tự động gỡ kính để cứu nguy nếu khách không biết bấm
             blurTimer = setTimeout(() => {
                 if (uiState.isBlurry) {
-                    triggerBlurEgg(true); // Gọi ngược lại để tắt mờ
+                    triggerBlurEgg(true); 
                 }
             }, 5000);
         }
     } else {
-        // TẮT CHẾ ĐỘ MỜ
         document.body.classList.remove('blur-mode');
         Array.from(chatBox.children).forEach(child => child.classList.remove('blurry-msg'));
     }
@@ -2840,8 +2679,6 @@ async function triggerBlurEgg(isFromAI = false) {
     async function triggerDartEgg(isFromAI = false) {
     if(isBotBusy() || uiState.isDartCooldown) return;
     dartClicks++;
-    
-    // Nếu AI gọi, cho kích hoạt luôn không cần đếm đủ 3 click
     if(dartClicks === 3 || isFromAI) {
         dartClicks = 0; uiState.isDartCooldown = true;
         document.getElementById('dart-icon').classList.add('dart-throw');
@@ -2851,8 +2688,6 @@ async function triggerBlurEgg(isFromAI = false) {
             statusDot.classList.remove('dart-shake');
             document.getElementById('dart-icon').classList.remove('dart-throw');
         }, 13000);
-        
-        // Chặn nếu từ AI
         if (!isFromAI) {
             await showTypingIndicator(1200, false);
             appendBotMsg(translations[currentLang].eggDart, 0, 1, true);
@@ -2884,8 +2719,6 @@ async function triggerBlurEgg(isFromAI = false) {
     status.classList.add('zelda-status');
     sword.classList.add('sword-drop-anim');
     setTimeout(() => sword.classList.remove('sword-drop-anim'), 3000);
-
-    // CHỈ IN 3 CÂU TỰ ĐỘNG NẾU KHÁCH TỰ GÕ LỆNH
     if (!isFromAI) {
         await showTypingIndicator(800, false); appendBotMsg(translations[currentLang].eggZelda1, 0, 3, true);
         await showTypingIndicator(1500, false); appendBotMsg(translations[currentLang].eggZelda2, 1, 3, true);
@@ -2914,8 +2747,6 @@ async function triggerBlurEgg(isFromAI = false) {
     let cup = document.getElementById('sb-coffee');
     cup.classList.add('sb-pop-anim');
     setTimeout(() => cup.classList.remove('sb-pop-anim'), 3500);
-
-    // Chặn thoại tự động nếu do AI gọi
     if (!isFromAI) {
         await showTypingIndicator(1000, false); appendBotMsg(translations[currentLang].eggSb1, 0, 3, true);
         await showTypingIndicator(1200, false); appendBotMsg(translations[currentLang].eggSb2, 1, 3, true);
@@ -2965,8 +2796,6 @@ async function triggerBlurEgg(isFromAI = false) {
         }, 9500);
         activeEggTimeouts.push(logoutTimer);
     }
-
-    // ĐÃ FIX LỖI 4, 5, 6: Gọi Egg khác sẽ ép tắt nhạc và thu hồi bong bóng triệt để
     function clearVisualModes(keepMusicText = false) {
         if (!keepMusicText && isMusicPlaying) {
             const audioEl = document.getElementById('bg-audio'); audioEl.pause(); isMusicPlaying = false;
@@ -2978,8 +2807,6 @@ async function triggerBlurEgg(isFromAI = false) {
         status.classList.remove('music-status', 'zelda-status', 'sb-status');
         if (!keepMusicText) {
         status.innerText = document.body.classList.contains('doraemon-mode') ? (currentLang === 'ja' ? "ドラえもん 🔔" : "Doraemon 🔔") : translations[currentLang].status;}
-        
-        // Hiệu ứng mờ dần sóng hạt rồi mới tắt hẳn
         if (vis) { vis.style.opacity = '0'; setTimeout(() => { if (!isMusicPlaying) vis.style.display = 'none'; }, 2500); }
         checkNightTimeForCoffee();
     }
@@ -2997,7 +2824,6 @@ async function triggerBlurEgg(isFromAI = false) {
     const groupId = 'music-group-' + Date.now(); 
 
     if (!isFromAI) {
-        // NẾU KHÁCH TỰ GÕ LỆNH: Vẫn hiện bong bóng mời nghe nhạc như cũ
         await showTypingIndicator(1500, false);
         const html = `
         <div class="flex items-end gap-1.5 w-full mb-1 mt-5">
@@ -3009,7 +2835,6 @@ async function triggerBlurEgg(isFromAI = false) {
         chatBox.insertAdjacentHTML('beforeend', html); chatBox.scrollTop = chatBox.scrollHeight;
         eggMessageIds.push(`${groupId}-invite`); 
     } else {
-        // NẾU AI GỌI: Bỏ qua lời mời, hiện thẳng mini-player ra màn hình
         clearVisualModes(false);
         document.getElementById('main-chat-wrapper').classList.add('music-mode');
         let status = document.getElementById('bot-status');
@@ -3031,8 +2856,6 @@ async function triggerBlurEgg(isFromAI = false) {
             <span class="song-artist">${translations[currentLang].songArtist}</span>
           </div>
         </div>`;
-        
-        // Cần delay nhẹ 0.5s để UI không bị giật khi thả player xuống
         setTimeout(() => {
             appendBotMsg(playerHtml, 0, 1, false); 
             eggMessageIds.push(`${groupId}-player`);
@@ -3081,12 +2904,12 @@ async function triggerBlurEgg(isFromAI = false) {
         if (!audioCtx) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             analyser = audioCtx.createAnalyser();
-            gainNode = audioCtx.createGain(); // TẠO NÚM VẶN ÂM LƯỢNG KỸ THUẬT SỐ
+            gainNode = audioCtx.createGain(); 
             source = audioCtx.createMediaElementSource(audioEl);
             
             source.connect(analyser); 
-            analyser.connect(gainNode); // Nối vào núm vặn
-            gainNode.connect(audioCtx.destination); // Từ núm vặn nối ra loa
+            analyser.connect(gainNode); 
+            gainNode.connect(audioCtx.destination); 
             
             analyser.fftSize = 64; dataArray = new Uint8Array(analyser.frequencyBinCount);
         }
@@ -3122,7 +2945,6 @@ async function triggerBlurEgg(isFromAI = false) {
     }
 
     function fadeAudio(audioEl, targetVolume, duration, onComplete) {
-        // Lấy âm lượng hiện tại từ GainNode
         const startVol = (typeof gainNode !== 'undefined' && gainNode) ? gainNode.gain.value : audioEl.volume;
         const change = targetVolume - startVol;
         const stepTime = duration / 20; let currentStep = 0;
@@ -3134,7 +2956,6 @@ async function triggerBlurEgg(isFromAI = false) {
             let newVol = startVol + change * (currentStep / 20); 
             newVol = newVol > 1 ? 1 : (newVol < 0 ? 0 : newVol);
             
-            // Điều khiển âm lượng thực tế qua hệ thống kỹ thuật số
             if (typeof gainNode !== 'undefined' && gainNode) { gainNode.gain.value = newVol; }
             audioEl.volume = newVol; 
             
@@ -3154,24 +2975,18 @@ async function triggerBlurEgg(isFromAI = false) {
     const wrapper = document.getElementById('main-chat-wrapper');
     const status = document.getElementById('bot-status');
 
-    // Đảm bảo bắt sự kiện kết thúc bài hát (chỉ gán 1 lần)
     if (!audioEl.dataset.ended) {
         audioEl.addEventListener('ended', () => {
             btn.innerText = "▶";
             isMusicPlaying = false;
-            resetAllVisuals(); // Dọn dẹp UI khi hết bài
+            resetAllVisuals(); 
             audioEl.currentTime = 0;
         });
         audioEl.dataset.ended = 'true';
     }
-
-    // LÀM SẠCH BỘ ĐỆM: Xóa bỏ các lệnh dừng nhạc cũ đang chạy dở
     if (musicPauseTimer) { clearTimeout(musicPauseTimer); musicPauseTimer = null; }
     if (audioEl.fadeInterval) { clearInterval(audioEl.fadeInterval); }
-
-    // KIỂM TRA TRẠNG THÁI: Nếu đang KHÔNG chơi nhạc (hoặc đang dừng nửa chừng)
     if (!isMusicPlaying) {
-        // BẬT NHẠC
         isMusicPlaying = true;
         btn.innerText = "⏸";
         wrapper.classList.add('music-mode');
@@ -3188,7 +3003,7 @@ async function triggerBlurEgg(isFromAI = false) {
         }
         audioEl.play().then(() => {
             initVisualizer();
-            fadeAudio(audioEl, 1, 800); // Fade-in nhanh hơn (0.8s) để tạo cảm giác mượt
+            fadeAudio(audioEl, 1, 800); 
         }).catch(e => console.error("Lỗi phát nhạc:", e));
     } else {
         isMusicPlaying = false;
@@ -3202,7 +3017,6 @@ async function triggerBlurEgg(isFromAI = false) {
         }
         fadeAudio(audioEl, 0, 1000, () => {
             audioEl.pause();
-            // Đặt lịch thu hồi tin nhắn sau 10s nếu user không nghe tiếp
             musicPauseTimer = setTimeout(() => {
                 if (!isMusicPlaying) recallLastEgg(false, 'music');
             }, 10000);
@@ -3215,12 +3029,10 @@ async function triggerBlurEgg(isFromAI = false) {
         let tag = document.getElementById('power-tag');
         
         if(h >= 1 && h < 3) {
-            // Nếu là ban đêm (1h - 3h sáng) -> Luôn hiện thẻ Caffeine
             tag.innerText = "☕ CAFFEINE POWERED"; 
             tag.style.color = "#d97706"; 
             tag.style.background = "rgba(217, 119, 6, 0.1)";
         } else {
-            // Nếu là ban ngày -> Trả về thẻ M1 PRO gốc
             tag.innerText = "M1 PRO POWERED"; 
             tag.style.color = "var(--text-sub)"; 
             tag.style.background = "rgba(255,255,255,0.1)";
@@ -3240,9 +3052,7 @@ async function triggerBlurEgg(isFromAI = false) {
         const now = new Date();
         const h = now.getHours();
         const m = now.getMinutes();
-        // Ngủ trưa: Từ 13h30 đến 13h59 (đúng 14h00 sẽ thức dậy)
         const isAfternoonSleep = (h === 13 && m >= 30);
-        // Ngủ tối: Từ 2h sáng đến 5h59 sáng (đúng 6h00 sáng sẽ thức dậy)
         const isNightSleep = (h >= 2 && h < 6);
         return isAfternoonSleep || isNightSleep;
     }
@@ -3292,8 +3102,6 @@ async function triggerBlurEgg(isFromAI = false) {
         dreamQueue = shuffleArray([...translations[currentLang].dreams]);
         spawnDream(); dreamTimer = setInterval(spawnDream, 4500);
     }
-
-    // ĐÃ FIX LỖI 2: Đa ngôn ngữ cho chọc chọc
     async function handleFakeWakeUp() {
         document.getElementById('thought-cloud').classList.add('hidden');
         sendBtn.disabled = true; sendBtn.innerText = "...";
@@ -3445,10 +3253,8 @@ function changeLang(lang, isInit = false) {
           renderThreadsList(window.cachedThreadsData);
       }
       if (isMaintMode) {
-          // NẾU ĐANG BẢO TRÌ: Chỉ đổi chữ, KHÔNG in bong bóng chat
           inputField.placeholder = translations[currentLang].maintPlaceholder;
       } else if(isAppSleeping) {
-          // NẾU LÀ NGỦ GIẢ: Mới in bong bóng chat
           inputField.placeholder = translations[currentLang].sleepPlaceholder;
           appendBotMsg(translations[currentLang].sleepyMsg1, 0, 2); appendBotMsg(translations[currentLang].sleepyMsg2, 1, 2);
           appendSystemMsg(translations[currentLang].sleepMsg);
@@ -3477,25 +3283,19 @@ function changeLang(lang, isInit = false) {
         document.body.classList.toggle('no-scroll');
 
         if (isNowFull) {
-            // Thử kích hoạt API toàn màn hình nếu thiết bị hỗ trợ (Android/Desktop)
             if (wrapper.requestFullscreen) { wrapper.requestFullscreen(); }
             else if (wrapper.webkitRequestFullscreen) { wrapper.webkitRequestFullscreen(); }
             else if (wrapper.msRequestFullscreen) { wrapper.msRequestFullscreen(); }
-            // Đổi icon sang Thu Nhỏ
             icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9h5V4 M4 4l5 5 M20 9h-5V4 M20 4l-5 5 M4 15h5v5 M4 20l5-5 M20 15h-5v5 M20 20l-5-5"></path>';
         } else {
-            // Thoát chế độ toàn màn hình
             if (document.exitFullscreen) { document.exitFullscreen(); }
             else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
-            // Đổi icon sang Phóng To
             icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>';
         }
         
-        // Chống lỗi mất góc nhìn trên iOS khi chuyển đổi
         window.scrollTo(0, 0); 
         setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 50);
     }
-    // ĐÃ FIX LỖI 7: Tẩy não hoàn toàn bộ đệm nhạc khi xóa chat
     function clearChat() {
       if(autoChatActive || isAppSleeping || isFakeSleeping || userMessageBuffer.length > 0) return; 
       let confirmMsg = translations[currentLang].clearChatConfirm;
@@ -3511,20 +3311,15 @@ function changeLang(lang, isInit = false) {
     }
 
     function getAvatarUrl() { 
-        // Nếu đang ở chế độ Doraemon thì tráo ảnh
         if (document.body.classList.contains('doraemon-mode')) {
             return 'https://lh3.googleusercontent.com/u/0/d/1hNYpKhVCHSU7999IesjQoNktNOnNqr9k';
         }
-        // Nếu bình thường thì lấy ảnh avatar Peih
         const img = document.getElementById('main-profile-pic'); 
         return img ? img.src : ''; 
     }
     function appendSystemMsg(text) { const html = `<div class="system-bubble">${text}</div>`; chatBox.insertAdjacentHTML('beforeend', html); chatBox.scrollTop = chatBox.scrollHeight; }
 
-
-    // Thêm tham số autoSync = false ở cuối
-// Trả lại tham số gốc ban đầu
-function appendBotMsg(text, index = 0, total = 1, isEgg = false, isRealPeih = false) {
+  function appendBotMsg(text, index = 0, total = 1, isEgg = false, isRealPeih = false) {
     if(isEgg && index === 0) recallLastEgg(false, 'normal');
     let shapeClass = "rounded-[24px]", showAvatar = true;
     if (total > 1) {
@@ -3545,9 +3340,6 @@ function appendBotMsg(text, index = 0, total = 1, isEgg = false, isRealPeih = fa
     
     if (isEgg) eggMessageIds.push(msgId);
     if (document.body.classList.contains('doraemon-mode') && !isEgg && index === 0) { tengTengSound.currentTime = 0; tengTengSound.play().catch(e => {}); }
-
-    // --- LOGIC ĐÃ ĐƯỢC LÀM MỚI ---
-    // Tự động bắn lên Firebase nếu ĐANG KHÔNG PHẢI LÚC TẢI LỊCH SỬ và KHÔNG PHẢI ADMIN NHẮN
     if (!window.isRestoringHistory && currentSessionId && typeof database !== 'undefined') {
         if (!isRealPeih) { 
             const sysId = Date.now() + Math.floor(Math.random() * 1000) + index;
@@ -3621,24 +3413,20 @@ function appendBotMsg(text, index = 0, total = 1, isEgg = false, isRealPeih = fa
         const parts = text.split('\n').filter(m => m.trim() !== '');
         let bubblesHtml = ''; 
         parts.forEach(p => { 
-    const safeText = escapeHTML(p); // Lọc text trước khi đưa vào DOM
+    const safeText = escapeHTML(p); 
     bubblesHtml += `<div class="msg-bubble" style="background-color: var(--user-msg-bg); color: var(--user-msg-text);">${safeText}</div>`;});
         const html = `<div class="user-msg-group"><div class="user-bubbles">${bubblesHtml}</div></div>`;
         chatBox.insertAdjacentHTML('beforeend', html);
     }
 }
-    // --- HÀM TẠO THÔNG BÁO LỖI ĐA NGÔN NGỮ (Ưu tiên ngôn ngữ hiện tại) ---
 function getDynamicSystemLostMsg() {
     const msgs = {
         vi: "⚠️ Kết nối đến máy chủ bị gián đoạn. Vui lòng kiểm tra mạng hoặc tải lại trang.",
         en: "⚠️ Connection to the server was interrupted. Please check your network or refresh.",
         ja: "⚠️ サーバーへの接続が中断されました。ネットワークを確認するか、再読み込みしてください。"
     };
-    
-    // Đẩy ngôn ngữ hiện tại lên đầu, in đậm, đổi màu đỏ
     let html = `<b style="color: #ef4444; font-size: 13px;">${msgs[currentLang]}</b><br><span style="font-size:11px; opacity:0.7; display:block; margin-top:6px; line-height:1.6; color: var(--text-main);">`;
     
-    // Ghép 2 ngôn ngữ còn lại nhỏ hơn ở phía dưới
     Object.keys(msgs).forEach(lang => {
         if (lang !== currentLang) {
             html += msgs[lang] + "<br>";
@@ -3672,7 +3460,6 @@ function getDynamicSystemLostMsg() {
         }
     }, 3000);
 }
-    // Biến toàn cục để khóa hệ thống khi mất mạng
     window.isSystemHalted = false;
     changeLang(currentLang, true);
     document.addEventListener('DOMContentLoaded', () => {
@@ -3693,8 +3480,6 @@ function getDynamicSystemLostMsg() {
       document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
       
       let isConfigLoaded = false;
-      
-      // Đồng hồ 1: 4s
       let loadingTimer4s = setTimeout(() => {
           if (!isConfigLoaded) {
               const welcomeScreen = document.getElementById('welcome-screen');
@@ -3710,10 +3495,9 @@ function getDynamicSystemLostMsg() {
           }
       }, 4000);
 
-      // Đồng hồ 2: 10s
       let loadingTimer10s = setTimeout(() => {
           if (!isConfigLoaded) {
-              window.isSystemHalted = true; // Cắm cờ sập hệ thống
+              window.isSystemHalted = true; 
               document.getElementById('welcome-screen').classList.add('hidden');
               appendSystemMsg(getDynamicSystemLostMsg());
               inputField.disabled = true; 
@@ -3721,7 +3505,6 @@ function getDynamicSystemLostMsg() {
               inputField.placeholder = translations[currentLang].disconnected; 
           }
       }, 15000);
-      // HÀM GỌT THỜI GIAN THÀNH ĐỊNH DẠNG HH:MM - DD/MM
       function formatETA(timestamp) {
           if (!timestamp || timestamp === 0) return "";
           const d = new Date(timestamp);
@@ -3738,8 +3521,6 @@ function getDynamicSystemLostMsg() {
 
           const sysBubbles = document.querySelectorAll('.system-bubble');
           sysBubbles.forEach(b => { if (b.innerText.includes("⚠️")) b.remove(); });
-
-          // TÁCH PAYLOAD THÀNH CONFIG VÀ THREADS Ở ĐÂY
           globalUIConfig = payload.uiConfig;
           window.cachedThreadsData = payload.threadsData; 
           let config = payload.uiConfig; 
@@ -3790,30 +3571,23 @@ function getDynamicSystemLostMsg() {
           }
           
           if(config.appStatus === "LOCK") {
-              // 1. Không ẩn Welcome screen vội, để cho chữ Peih World trồi lên cho đẹp
               document.getElementById('welcome-screen').classList.remove('hidden');
-              
-              // 2. Canh đúng 4.5 giây (lúc chữ Peih trồi lên xong) thì sập rèm
               setTimeout(() => {
                   const gate = document.getElementById('gatekeeper-screen');
                   if(gate) {
                       gate.classList.remove('hidden');
                       gate.classList.add('flex');
-                      setTimeout(() => gate.classList.remove('opacity-0'), 50); // Fade in mượt
+                      setTimeout(() => gate.classList.remove('opacity-0'), 50); 
                   }
                   
-                  // 3. CHIÊU SÁT THỦ: Hủy diệt hoàn toàn code HTML bên trong
                   const appContainer = document.querySelector('.app-container');
                   if (appContainer) appContainer.remove(); 
                   
                   document.body.style.overflow = 'hidden'; 
               }, 4500); 
               
-              return; // Chặn ngang tại đây, không cho load tin nhắn hay giao diện gì cả!
+              return; 
           }
-          // --- KẾT THÚC CODE KHÓA TỬ THẦN ---
-
-          // Nếu không bị LOCK thì mới ẩn màn hình Welcome đi và chạy bình thường
           document.getElementById('welcome-screen').classList.add('hidden');
           if(config.appStatus === "MAINT") {
              chatBox.innerHTML = ''; 
@@ -3829,7 +3603,7 @@ function getDynamicSystemLostMsg() {
              await showTypingIndicator(1500, true); appendBotMsg(translations[currentLang].sleepyMsg2, 1, 2);
              setTimeout(() => { appendSystemMsg(translations[currentLang].sleepMsg); }, 1200);
          } else {
-             toggleM1Maintenance(false); // Tắt màn hình bảo trì
+             toggleM1Maintenance(false); 
              if(chatContextHistory.length > 0) {
                  window.isRestoringHistory = true;
                  chatContextHistory.forEach(msg => {
@@ -3848,7 +3622,7 @@ function getDynamicSystemLostMsg() {
              } else { inputField.disabled = true; sendBtn.disabled = true; startAutoChat(); }
          }
         }).withFailureHandler(function() {
-            window.isSystemHalted = true; // Cắm cờ sập hệ thống
+            window.isSystemHalted = true; 
             isConfigLoaded = true; 
             clearTimeout(loadingTimer4s);
             clearTimeout(loadingTimer10s);
@@ -3893,26 +3667,21 @@ function getDynamicSystemLostMsg() {
         }).getInitialAppPayload(currentLang);
     }
 
-    // --- BẮT ĐẦU ĐOẠN CODE THAY THẾ ---
 let lastInputValue = ""; 
-let hasSeenSecretTooltip = false; // Nhớ trạng thái khách đã xem chưa
-
-// Tự động quét: BUNG RA NGAY KHI MÀN HÌNH WELCOME BIẾN MẤT
+let hasSeenSecretTooltip = false; 
 let tooltipCheckTimer = setInterval(() => {
     const welcomeScreen = document.getElementById('welcome-screen');
-    
-    // Nếu màn hình chào đã ẩn, không phải gọi ống bơ, và khách chưa xem
     if (welcomeScreen && welcomeScreen.classList.contains('hidden') && !isHotlineMode && !hasSeenSecretTooltip) {
         document.getElementById('secret-tooltip').classList.add('show');
-        clearInterval(tooltipCheckTimer); // Bung xong là hủy hẹn giờ luôn
+        clearInterval(tooltipCheckTimer); 
     }
-}, 500); // Quét liên tục mỗi nửa giây để bung ra nhanh nhất có thể
+}, 500);
 
 function hideSecretTooltip() {
     const tooltip = document.getElementById('secret-tooltip');
     if (tooltip && tooltip.classList.contains('show')) {
         tooltip.classList.remove('show');
-        hasSeenSecretTooltip = true; // Cất vĩnh viễn trong phiên chat này
+        hasSeenSecretTooltip = true; 
     }
 }
 
@@ -3921,18 +3690,16 @@ function handleInputTyping() {
     const glowContainer = inputEl.closest('.input-glow-container');
     let val = inputEl.value;
 
-    // 1. TỰ ĐỘNG FORMAT @ VÀ SỬA LỖI VÒNG LẶP XOÁ
     if (val === '@' || val === '@ ') {
         inputEl.value = '@Hiệp: ';
     } else if (val === '@Hiệp:' || val === '@Hiệp' || val === '@Hiệ' || val === '@Hi' || val === '@H') {
-        inputEl.value = ''; // Xoá chạm vào chữ -> xoá sạch ô
+        inputEl.value = ''; 
     } else if (val.startsWith('@') && !val.startsWith('@Hiệp: ')) {
         inputEl.value = '@Hiệp: ' + val.substring(1).trimStart();
     }
     
     lastInputValue = inputEl.value;
 
-    // 2. Đổi viền Xanh Ngọc & Placeholder
     if (inputEl.value.startsWith('@Hiệp: ')) {
         glowContainer.classList.add('direct-msg-glow');
         inputEl.placeholder = translations[currentLang].secretPlaceholder;
@@ -3945,42 +3712,32 @@ function handleInputTyping() {
         }
     }
 
-    // 3. Logic Gốc chống Spam
     if(userMessageBuffer.length > 0) {
         clearTimeout(typingTimer); clearTimeout(inputIdleTimer);
         inputIdleTimer = setTimeout(flushMessageBuffer, 7000); 
     }
     resetAfkTimer(); 
 }
-// --- KẾT THÚC ĐOẠN CODE THAY THẾ ---
-
-    // ĐÃ FIX LỖI 3: Tránh clear nhầm khi đang gõ lệnh nhạc
     async function handleChatSend() {
       if (!inputField.value.trim() || inputField.disabled) return;
       const userVal = inputField.value;
       const cmd = userVal.trim().toLowerCase();
-      // --- BẮT ĐẦU ĐOẠN CHẶN LỆNH ---
       if (document.body.classList.contains('doraemon-mode')) {
           const forbiddenCmds = ['/zelda', '/starbucks', '/logout', '/music', '/play'];
           if (forbiddenCmds.includes(cmd)) {
               inputField.value = '';
               let warningMsg = translations[currentLang].doraWarning;
-              
-              // Chia nhỏ tin nhắn và lặp qua để tạo hiệu ứng gõ phím
               const messages = warningMsg.split('\n');
               for (let i = 0; i < messages.length; i++) {
-                  // Bong bóng đầu tiên load nhanh hơn, các bong bóng sau sẽ có dấu "..."
                   await showTypingIndicator(800 + Math.random() * 500, i > 0);
                   appendBotMsg(messages[i], i, messages.length, true);
               }
               return; 
           }
       }
-      // --- KẾT THÚC ĐOẠN CHẶN LỆNH ---
 
       if (cmd.startsWith('/')) {
           if ((cmd === '/music' || cmd === '/play') && (isMusicPlaying || document.querySelector('.mini-player'))) {
-              // Bỏ qua clear nếu đang ở trong Play
           } else {
               clearVisualModes(false); 
           }
@@ -4018,8 +3775,6 @@ function handleInputTyping() {
     const typingId = 'typing-' + Date.now();
     chatBox.insertAdjacentHTML('beforeend', `<div id="${typingId}" class="flex items-end gap-1.5 w-full mb-1 mt-4"><img src="${getAvatarUrl()}" class="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm"><div class="rounded-[24px] px-4 py-3 flex gap-1 items-center shadow-sm h-[38px]" style="background-color: var(--bot-msg-bg); border: 1px solid var(--glass-border);"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`);
     chatBox.scrollTop = chatBox.scrollHeight;
-
-    // GỬI TIN NHẮN ẨN DANH (@Hiệp)
     if (combinedMessage.startsWith('@Hiệp: ')) {
         const realSecretMsg = combinedMessage.substring(7).trim(); 
         google.script.run.sendSecretMessage(currentSessionId, realSecretMsg, clientCity || "Không rõ", clientLat, clientLon);
@@ -4037,7 +3792,6 @@ function handleInputTyping() {
         return; 
     }
       
-    // GỌI ỐNG BƠ HOẶC BỊ CHẶN AI
     if (isHotlineMode || isAIBlockedByAdmin) {
         google.script.run.saveChatLogToSheet(currentSessionId, 'Khách (Ống Bơ/Bị Chặn AI)', combinedMessage, clientCity || "Không rõ", clientLat, clientLon, false);
         const updateId = Date.now();
@@ -4049,8 +3803,6 @@ function handleInputTyping() {
         inputField.focus(); resetAfkTimer();
         return; 
     }
-
-    // LÀN ƯU TIÊN: GỌI API GEMINI NGAY VÀ LUÔN
     clearTimeout(failsafeTimer);
     failsafeTimer = setTimeout(() => {
         const typingEl = document.getElementById(typingId); if (typingEl) typingEl.remove(); 
@@ -4098,13 +3850,9 @@ function handleInputTyping() {
     let buoi = h < 11 ? "Sáng" : (h < 14 ? "Trưa" : (h < 18 ? "Chiều" : (h < 22 ? "Tối" : "Đêm")));
     const clientTime = `${buoi} - ${now.getHours()}:${now.getMinutes() < 10 ? '0' : ''}${now.getMinutes()}, ngày ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} (${dayNames[now.getDay()]})`;
     const clientContext = { time: clientTime, lat: clientLat, lon: clientLon, city: clientCity, isDoraemon: document.body.classList.contains('doraemon-mode') };
-
-    // GỌI LLM:
     google.script.run.withSuccessHandler(async function(botResponse) {
         clearTimeout(failsafeTimer);
         const typingEl = document.getElementById(typingId); if (typingEl) typingEl.remove();
-
-        // Kiểm tra cụm từ gốc (không kèm dấu), sau đó xóa bằng Regex (có hoặc không có dấu | đều xóa sạch)
         if (botResponse.includes("TRIGGER_STARBUCKS")) { botResponse = botResponse.replace(/TRIGGER_STARBUCKS\|?/g, ""); triggerStarbucksEgg(true); }
         else if (botResponse.includes("TRIGGER_ZELDA")) { botResponse = botResponse.replace(/TRIGGER_ZELDA\|?/g, ""); triggerZeldaEgg(true); }
         else if (botResponse.includes("TRIGGER_MUSIC")) { botResponse = botResponse.replace(/TRIGGER_MUSIC\|?/g, ""); triggerMusicEgg(true); }
@@ -4157,7 +3905,6 @@ function handleInputTyping() {
             google.script.run.saveChatLogToSheet(currentSessionId, 'Peih AI', botResponse, clientCity || "Không rõ", clientLat, clientLon, false);
         }, 1000);
 
-        // Tóm tắt ngầm nếu đến cữ
         if (userMsgCountForSummary % 7 === 0) {
             setTimeout(() => {
                 const recentContext = chatContextHistory.slice(-12).map(m => `${m.role === 'user' ? 'Khách' : 'Peih AI'}: ${m.text}`).join('\n');
@@ -4184,9 +3931,7 @@ function handleInputTyping() {
         google.script.run.saveChatLogToSheet(currentSessionId, 'Khách', combinedMessage, clientCity || "Không biết", clientLat, clientLon, false);
     }, 50);
 }
-    // ================= LOGIC 3 MÓN HARDCORE =================
 
-    // 2. Sổ Đặt Lịch (Gửi về GG Sheets)
     function submitBooking() {
         const name = document.getElementById('book-name').value;
         const date = document.getElementById('book-date').value;
@@ -4199,19 +3944,19 @@ function handleInputTyping() {
         }
 
         const bookContent = document.getElementById('leather-book-content');
-        bookContent.classList.add('signing'); // Kích hoạt bút lông chim
+        bookContent.classList.add('signing'); 
 
         const bookingText = `🔔 YÊU CẦU ĐẶT LỊCH:\n- Tên: ${name}\n- Thời gian: ${time} ngày ${date}\n- Lời nhắn: ${note}`;
         google.script.run.saveChatLogToSheet(currentSessionId, 'BOOKING', bookingText, "Form Đặt Lịch", null, null);
 
         setTimeout(() => {
-            bookContent.classList.add('book-fly'); // Sổ gấp lại bay đi
+            bookContent.classList.add('book-fly'); 
             
             setTimeout(() => {
                 document.getElementById('booking-modal').classList.remove('open');
                 appendBotMsg(translations[currentLang].bookSuccess.replace('{name}', name).replace('{time}', time).replace('{date}', date), 0, 1, true);
             }, 1000);
-        }, 1500); // Đợi bút ký xong
+        }, 1500); 
     }
 window.cachedThreadsData = null; 
 let currentThreadsPage = 1; 
@@ -4227,23 +3972,18 @@ function toggleThreads() {
     const floatBtn = document.getElementById('floating-back-btn');
 
     if (!body.classList.contains('threads-active')) {
-        // ---- MỞ THREADS (Vuốt lên) ----
         body.classList.add('threads-active');
         if (!window.cachedThreadsData) loadThreadsData();
         else renderThreadsList(window.cachedThreadsData);
         
         const feed = document.getElementById('threads-feed');
         if (feed) feed.scrollTop = 0;
-        
-        // Đã xóa lệnh ép nút Back hiện lên. Layout sẽ do hàm cuộn chuột tự quyết định.
-
         setTimeout(() => { isThreadsAnimating = false; }, 400); 
     } else {
-        // ---- ĐÓNG THREADS (Trượt xuống) ----
+
         body.classList.remove('threads-active');
         body.classList.add('threads-closing'); 
         
-        // Vẫn giữ lệnh này để ép nút Back biến mất ngay khi tắt Threads
         if (floatBtn) {
             floatBtn.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
             floatBtn.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
@@ -4255,13 +3995,10 @@ function toggleThreads() {
         }, 400);
     }
 }
-    // Lắng nghe sự kiện cuộn để hiện Nút Nổi (Dùng chung Web & Mobile)
     function handleThreadsScroll() {
         if (!document.body.classList.contains('threads-active')) return;
         const floatBtn = document.getElementById('floating-back-btn');
         if (!floatBtn) return;
-        
-        // Trên Mobile thì lấy window.scrollY, Web thì lấy feed.scrollTop
         const feed = document.getElementById('threads-feed');
         const scrollPos = (window.innerWidth < 1024) ? window.scrollY : (feed ? feed.scrollTop : 0);
 
@@ -4274,7 +4011,6 @@ function toggleThreads() {
         }
     }
 
-    // Gắn sự kiện cuộn cho cả 2 môi trường
     window.addEventListener('scroll', handleThreadsScroll);
     document.addEventListener('DOMContentLoaded', () => {
         const feed = document.getElementById('threads-feed');
@@ -4470,17 +4206,10 @@ if (post.media && post.media.length > 0) {
     `;
 }
 
-// ==========================================
-// CÁC HÀM XỬ LÝ CLICK TƯƠNG TÁC BỀN VỮNG (CHỐNG LỖI "K")
-// ==========================================
 function handleThreadLike(element, rowIndex) {
     const storageKey = `liked_thread_${rowIndex}`;
-    if (localStorage.getItem(storageKey)) return; // Đã like rồi thì chặn luôn
-
-    // 1. Lưu trạng thái ngay lập tức vào LocalStorage
+    if (localStorage.getItem(storageKey)) return; 
     localStorage.setItem(storageKey, 'true');
-
-    // 2. Tạo hiệu ứng rung tim & Đổi màu
     element.classList.remove('hover:text-red-500', 'text-gray-500');
     element.classList.add('text-red-500');
     const svg = element.querySelector('svg');
@@ -4489,39 +4218,27 @@ function handleThreadLike(element, rowIndex) {
         svg.style.transform = 'scale(1.3)';
         setTimeout(() => svg.style.transform = 'scale(1)', 200);
     }
-
-    // 3. XỬ LÝ CỘNG SỐ VÀ HIỂN THỊ LÊN UI (ĐÃ FIX LỖI)
     const countSpan = element.querySelector('.like-count');
     if (countSpan) {
-        let newLikes = 1; // Mặc định là 1 nếu trước đó là 0 hoặc chưa có ai like
+        let newLikes = 1; 
         
         if (window.cachedThreadsData) {
             let post = window.cachedThreadsData.find(p => p.rowIndex === rowIndex);
             if (post) {
-                // BẮT BUỘC ÉP KIỂU NUMBER: Ngăn chặn lỗi cộng chuỗi từ Google Sheets
                 post.likes = (Number(post.likes) || 0) + 1; 
                 newLikes = post.likes;
             }
         } else {
-            // FALLBACK PHÒNG HỜ: Lấy thẳng số đang hiển thị trên UI cộng thêm 1
             let currentText = countSpan.innerText.replace(/k/gi, '000').replace(/M/gi, '000000');
             newLikes = (Number(currentText) || 0) + 1;
         }
-
-        // Gắn số mới lên giao diện ngay lập tức
         countSpan.innerText = formatCount(newLikes);
     }
-
-    // 4. Báo cho Sheets biết chạy ngầm
     if (typeof google !== 'undefined') {
         google.script.run.addThreadLike(rowIndex);
     }
 }
 
-// ==========================================
-// CÁC HÀM XỬ LÝ BÌNH LUẬN INLINE (TRỰC TIẾP DƯỚI BÀI)
-// ==========================================
-// 1. Mở / Đóng khu vực bình luận (Dùng hiệu ứng trượt)
 function handleThreadComment(element, rowIndex) {
     const section = document.getElementById(`comment-section-${rowIndex}`);
     const input = document.getElementById(`comment-input-${rowIndex}`);
@@ -4547,11 +4264,9 @@ function submitInlineComment(rowIndex) {
     const text = input.value.trim();
     if (!text) { input.focus(); return; }
 
-    input.blur(); // Ẩn bàn phím điện thoại
+    input.blur(); 
 
     const list = document.getElementById(`comment-list-${rowIndex}`);
-    
-    // A. In bình luận của Khách (Đã xóa tên "Bạn", chỉ hiện text)
     const newCommentHtml = `
         <div class="flex gap-2 items-start animate-fade-in">
             <div class="w-6 h-6 rounded-full bg-gray-500/20 flex items-center justify-center shrink-0 border border-gray-500/20 mt-0.5">
@@ -4564,8 +4279,6 @@ function submitInlineComment(rowIndex) {
     `;
     list.insertAdjacentHTML('beforeend', newCommentHtml);
     input.value = '';
-
-    // Cộng số đếm tạm trên UI
     if (window.cachedThreadsData) {
         let post = window.cachedThreadsData.find(p => p.rowIndex === rowIndex);
         if (post) {
@@ -4575,8 +4288,6 @@ function submitInlineComment(rowIndex) {
         }
     }
     google.script.run.addThreadComment(rowIndex, text, currentSessionId);
-
-    // B. Hiệu ứng AI Đang Gõ (Kèm đường kẻ chữ L)
     const typingId = `ai-typing-${Date.now()}`;
     const typingHtml = `
         <div id="${typingId}" class="flex gap-2 items-start animate-fade-in relative ml-8 mt-1">
@@ -4588,14 +4299,11 @@ function submitInlineComment(rowIndex) {
         </div>
     `;
     list.insertAdjacentHTML('beforeend', typingHtml);
-
-    // C. Gọi Backend AI xử lý
     google.script.run.withSuccessHandler(function(aiReply) {
         const tEl = document.getElementById(typingId);
-        if (tEl) tEl.remove(); // Xóa icon đang gõ
+        if (tEl) tEl.remove(); 
         
         if (aiReply) {
-            // D. In câu trả lời của AI ra
             const aiCommentHtml = `
                 <div class="flex gap-2 items-start animate-fade-in relative ml-8 mt-1">
                     <div class="reply-connector"></div>
@@ -4761,7 +4469,6 @@ async function requestCustomLanguage(targetLang, displayName) {
     }).translateFullPackage(finalLang, window.customTempFlag);
 }
 
-// Tự động đóng menu ngôn ngữ khi click ra ngoài
 document.addEventListener('click', function(e) {
     const dropdown = document.getElementById('lang-dropdown');
     if (!dropdown) return;
@@ -4775,43 +4482,31 @@ document.addEventListener('click', function(e) {
         }
     }
 });
-// Khi trình duyệt phát hiện có mạng trở lại
     window.addEventListener('online', () => {
-        // Chỉ chạy nếu trước đó hệ thống đã bị báo lỗi sập
         if (window.isSystemHalted) {
             inputField.placeholder = translations[currentLang].reconnecting;
-            
-            // Âm thầm gọi lại Google Script để nạp dữ liệu bị lỡ
             google.script.run.withSuccessHandler(async function(payload) {
-                window.isSystemHalted = false; // Mở khóa hệ thống
-                
-                // Quét và xóa sạch các câu báo lỗi màu đỏ trên màn hình
+                window.isSystemHalted = false; 
                 const sysBubbles = document.querySelectorAll('.system-bubble');
                 sysBubbles.forEach(b => { if (b.innerText.includes("⚠️")) b.remove(); });
                 
                 let config = payload.uiConfig;
                 globalUIConfig = config;
-                
-                // 🚨 BỨC TƯỜNG LỬA: KIỂM TRA LOCK NGAY LẬP TỨC VÀ BẮT QUẢ TANG
+      
                 if (config.appStatus === "LOCK") {
                     inputField.disabled = true;
                     sendBtn.disabled = true;
                     
-                    // Bộ từ điển cà khịa "Hacker lỏ" đa ngôn ngữ
                     const savageBypass = {
                         vi: "Tính rút cáp mạng để lách luật hả? Peih biết hết nha hacker lỏ! 😎 Đang đóng gói đưa bạn ra ngoài trong 7 giây...",
                         en: "Trying to bypass by cutting the network? Nice try! 😎 Kicking you out in 7 seconds...",
                         ja: "ネットワークを切ってバイパスしようとした？お見通しですよ！😎 7秒後に退出させます..."
                     };
                     
-                    // Xóa thông báo lỗi mạng màu đỏ trước đó cho sạch sẽ
                     const sysBubbles = document.querySelectorAll('.system-bubble');
                     sysBubbles.forEach(b => { if (b.innerText.includes("⚠️")) b.remove(); });
-                    
-                    // 1. In bong bóng cà khịa của Peih AI ra màn hình
+  
                     appendBotMsg(savageBypass[currentLang] || savageBypass['vi'], 0, 1, false, false);
-                    
-                    // 2. Kích hoạt đồng hồ đếm ngược 3.5 giây rồi mới sập rèm
                     setTimeout(() => {
                         document.getElementById('welcome-screen').classList.remove('hidden');
                         const gate = document.getElementById('gatekeeper-screen');
@@ -4821,16 +4516,14 @@ document.addEventListener('click', function(e) {
                             setTimeout(() => gate.classList.remove('opacity-0'), 50);
                         }
                         
-                        // Hủy diệt khung app không chừa dấu vết
                         const appContainer = document.querySelector('.app-container');
                         if (appContainer) appContainer.remove(); 
                         document.body.style.overflow = 'hidden';
                     }, 7500);
                     
-                    return; // Chặn đứng, KHÔNG cho chạy đoạn code mở cửa bên dưới nữa!
+                    return; 
                 }
                 
-                // --- CÁC TRẠNG THÁI BÌNH THƯỜNG ---
                 if(config.appStatus === "MAINT") {
                      toggleM1Maintenance(true);
                      isAppSleeping = true;
@@ -4848,7 +4541,6 @@ document.addEventListener('click', function(e) {
                      setTimeout(() => { appendSystemMsg(translations[currentLang].sleepMsg); }, 1200);
                 } else {
                      toggleM1Maintenance(false);
-                     // Mở khóa UI, trở lại bình thường
                      inputField.disabled = false; 
                      sendBtn.disabled = false;
                      sendBtn.innerText = translations[currentLang].sendBtn;
@@ -4871,11 +4563,11 @@ document.addEventListener('click', function(e) {
             }).getInitialAppPayload(currentLang);
         }
     });
-    /* ================= STORY 24H LOGIC (Tối ưu RAM) ================= */
+
 let currentStoryList = [];
 let currentStoryIndex = 0;
 let storyTimer;
-const STORY_DURATION = 5000; // Mặc định 5s cho mỗi ảnh
+const STORY_DURATION = 5000; 
 
 function loadDailyStories() {
     google.script.run.withSuccessHandler(function(stories) {
@@ -5130,12 +4822,10 @@ function translateThread(rowIndex) {
     if (!textEl || !btnEl) return;
     
     const originalText = textEl.innerText;
-    // Hiệu ứng đang dịch (hiện dấu 3 chấm mờ)
     btnEl.innerText = " ...";
     btnEl.style.pointerEvents = "none";
 
     google.script.run.withSuccessHandler(function(translatedText) {
-        // Đổi chữ và ẩn nút dịch đi hoàn toàn
         textEl.innerText = translatedText;
         btnEl.style.display = 'none'; 
     }).withFailureHandler(function(e) {
